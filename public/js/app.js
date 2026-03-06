@@ -26,6 +26,8 @@ let controls;
 let grid;
 let ambient;
 let dirLight;
+let avatar;
+let modelErrorNotice = null;
 
 const shirtTargets = [];
 const pantsTargets = [];
@@ -33,7 +35,7 @@ const pantsTargets = [];
 let shirtTexture = null;
 let pantsTexture = null;
 
-const shirtNames = [
+const r15ShirtPartNames = [
   "UpperTorso",
   "LowerTorso",
   "LeftUpperArm",
@@ -44,7 +46,7 @@ const shirtNames = [
   "RightHand",
 ];
 
-const pantsNames = [
+const r15PantsPartNames = [
   "LeftUpperLeg",
   "LeftLowerLeg",
   "LeftFoot",
@@ -91,6 +93,42 @@ function init() {
   window.addEventListener("resize", onResize);
   loadAvatar();
   bindUiEvents();
+  exposeKotlinBridge();
+}
+
+/**
+ * Expose functions to window object for Kotlin WebView access
+ */
+function exposeKotlinBridge() {
+  window.setShirtFromBase64 = (base64Data) => {
+    loadTextureFromBase64(base64Data, "shirt");
+  };
+
+  window.setPantsFromBase64 = (base64Data) => {
+    loadTextureFromBase64(base64Data, "pants");
+  };
+
+  window.clearShirt = () => clearTexture("shirt");
+  window.clearPants = () => clearTexture("pants");
+}
+
+function loadTextureFromBase64(base64Data, type) {
+  // Ensure the base64 string has the correct prefix
+  const dataUri = base64Data.startsWith("data:") ? base64Data : `data:image/png;base64,${base64Data}`;
+  
+  const loader = new THREE.TextureLoader();
+  loader.load(
+    dataUri,
+    (texture) => {
+      texture.flipY = false;
+      texture.colorSpace = THREE.SRGBColorSpace;
+      applyClothingTexture(type, texture);
+    },
+    undefined,
+    (err) => {
+      console.error("Failed to load texture from Kotlin:", err);
+    }
+  );
 }
 
 function bindUiEvents() {
@@ -141,13 +179,20 @@ function onResize() {
 
 function loadAvatar() {
   const loader = new GLTFLoader();
+
+  clearAvatar();
+  clearModelErrorNotice();
+
   loader.load(
     "public/models/r15.glb",
     (gltf) => {
-      const avatar = gltf.scene;
+      avatar = gltf.scene;
       avatar.scale.set(0.25, 0.25, 0.25);
       avatar.rotation.y = Math.PI;
       scene.add(avatar);
+
+      const shirtNameSet = new Set(r15ShirtPartNames);
+      const pantsNameSet = new Set(r15PantsPartNames);
 
       avatar.traverse((obj) => {
         if (!obj.isMesh) {
@@ -160,31 +205,73 @@ function loadAvatar() {
           roughness: 0.95,
         });
 
-        if (shirtNames.includes(obj.name)) {
+        if (shirtNameSet.has(obj.name)) {
           shirtTargets.push(obj);
         }
 
-        if (pantsNames.includes(obj.name)) {
+        if (pantsNameSet.has(obj.name)) {
           pantsTargets.push(obj);
         }
       });
+
+      if (shirtTexture) {
+        applyClothingTexture("shirt", shirtTexture, false);
+      }
+
+      if (pantsTexture) {
+        applyClothingTexture("pants", pantsTexture, false);
+      }
     },
     undefined,
     (error) => {
-      // Show an inline warning so users know why the model is not visible.
       console.error("Failed to load model public/models/r15.glb", error);
-      const msg = document.createElement("div");
-      msg.style.position = "absolute";
-      msg.style.top = "10px";
-      msg.style.right = "10px";
-      msg.style.background = "rgba(200,50,70,0.14)";
-      msg.style.border = "1px solid rgba(200,50,70,0.4)";
-      msg.style.padding = "8px 10px";
-      msg.style.borderRadius = "8px";
-      msg.textContent = "Missing model: place r15.glb under public/models/";
-      canvasMount.appendChild(msg);
+      showModelErrorNotice("Missing model: place r15.glb under public/models/");
     }
   );
+}
+
+function clearAvatar() {
+  shirtTargets.length = 0;
+  pantsTargets.length = 0;
+
+  if (!avatar) {
+    return;
+  }
+
+  scene.remove(avatar);
+  avatar.traverse((obj) => {
+    if (!obj.isMesh) {
+      return;
+    }
+    if (Array.isArray(obj.material)) {
+      obj.material.forEach((material) => material.dispose());
+      return;
+    }
+    obj.material.dispose();
+  });
+  avatar = null;
+}
+
+function showModelErrorNotice(text) {
+  clearModelErrorNotice();
+  modelErrorNotice = document.createElement("div");
+  modelErrorNotice.style.position = "absolute";
+  modelErrorNotice.style.top = "10px";
+  modelErrorNotice.style.right = "10px";
+  modelErrorNotice.style.background = "rgba(200,50,70,0.14)";
+  modelErrorNotice.style.border = "1px solid rgba(200,50,70,0.4)";
+  modelErrorNotice.style.padding = "8px 10px";
+  modelErrorNotice.style.borderRadius = "8px";
+  modelErrorNotice.textContent = text;
+  canvasMount.appendChild(modelErrorNotice);
+}
+
+function clearModelErrorNotice() {
+  if (!modelErrorNotice) {
+    return;
+  }
+  modelErrorNotice.remove();
+  modelErrorNotice = null;
 }
 
 function handleTextureUpload(event, type) {
@@ -219,12 +306,12 @@ function handleTextureUpload(event, type) {
   );
 }
 
-function applyClothingTexture(type, texture) {
+function applyClothingTexture(type, texture, replaceExisting = true) {
   const isShirt = type === "shirt";
   const previous = isShirt ? shirtTexture : pantsTexture;
   const targets = isShirt ? shirtTargets : pantsTargets;
 
-  if (previous) {
+  if (replaceExisting && previous && previous !== texture) {
     previous.dispose();
   }
 
