@@ -3,67 +3,56 @@
 
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Roblox Outfit Viewer</title>
-  <meta name="description" content="Upload Roblox shirt and pants textures to preview them on an R15 avatar." />
+  <meta name="description" content="Roblox R15 3D outfit viewer for WebView integration." />
   <link rel="stylesheet" href="public/css/style.css" />
   <link rel="icon" type="image/x-icon" href="public/assets/icon.ico" />
   <link rel="apple-touch-icon" type="image/png" href="public/assets/icon.png" />
+  <style>
+    /* Viewer-only overrides */
+    body, html { margin: 0; padding: 0; overflow: hidden; background: #0b0e11; }
+    #viewer { width: 100vw; height: 100vh; position: relative; }
+    #canvasMount { width: 100%; height: 100%; }
+    .workspace-controls {
+      position: absolute;
+      bottom: 24px;
+      right: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      z-index: 10;
+    }
+    #sidebar {
+      position: absolute;
+      top: 0; right: 0;
+      height: 100%;
+      z-index: 20;
+    }
+  </style>
 </head>
 
 <body>
-  <header class="topbar">
-    <div class="brandwrap">
-      <span class="title">Roblox Outfit Viewer</span>
+  <div id="viewer">
+    <div id="canvasMount"></div>
+
+    <div class="workspace-controls">
+      <button id="resetView" class="back-btn" title="Reset View">🔄</button>
+      <button id="screenshot" class="back-btn" title="Save Screenshot">📸</button>
     </div>
 
-    <div class="toolbar">
-      <label class="btn file">
-        <input id="shirtInput" type="file" accept="image/png" hidden />
-        Upload Shirt
-      </label>
-      <label class="btn file">
-        <input id="pantsInput" type="file" accept="image/png" hidden />
-        Upload Pants
-      </label>
-      <button id="clearShirt" class="btn ghost">Clear Shirt</button>
-      <button id="clearPants" class="btn ghost">Clear Pants</button>
-      <div class="spacer"></div>
-      <button id="resetView" class="btn">Reset View</button>
-      <button id="screenshot" class="btn outline">Save Screenshot</button>
-      <button id="toggleSidebar" class="btn ghost" aria-pressed="false">Controls ></button>
-    </div>
-  </header>
 
-  <main class="workspace">
-    <section class="stage">
-      <div id="canvasMount" class="canvas"></div>
-      <div class="hud">Drag to rotate | Scroll to zoom | Right-drag to pan</div>
-    </section>
+  </div>
 
-    <aside class="sidebar" id="sidebar">
-      <div class="card">
-        <div class="row">
-          <label class="checkbox"><input id="showGrid" type="checkbox" checked /><span>Show grid</span></label>
-          <label class="checkbox"><input id="lockCamera" type="checkbox" /><span>Lock camera</span></label>
-        </div>
-
-        <div class="group">
-          <div class="row slider">
-            <span>Ambient</span>
-            <input id="ambient" type="range" min="0" max="2" step="0.01" value="0.6" />
-            <span id="ambientVal" class="mono">0.60</span>
-          </div>
-          <div class="row slider">
-            <span>Sunlight</span>
-            <input id="sun" type="range" min="0" max="4" step="0.01" value="1.2" />
-            <span id="sunVal" class="mono">1.20</span>
-          </div>
-        </div>
-      </div>
-    </aside>
-  </main>
-
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "./public/js/lib/three.module.js",
+      "three/examples/jsm/controls/OrbitControls.js": "./public/js/lib/OrbitControls.js",
+      "three/examples/jsm/loaders/GLTFLoader.js": "./public/js/lib/GLTFLoader.js"
+    }
+  }
+  </script>
   <script type="module" src="public/js/app.js"></script>
 </body>
 
