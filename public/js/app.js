@@ -1,11 +1,14 @@
-import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import * as THREE from "./lib/three.module.js";
+import { OrbitControls } from "./lib/OrbitControls.js";
+import { GLTFLoader } from "./lib/GLTFLoader.js";
+
+
+// Debug log
+console.log("app.js starting execution...");
 
 // DOM Elements
+
 const canvasMount = document.getElementById("canvasMount");
-const resetViewBtn = document.getElementById("resetView");
-const screenshotBtn = document.getElementById("screenshot");
 
 // Scene state
 let scene, camera, renderer, controls, grid, ambient, dirLight, avatar;
@@ -15,18 +18,41 @@ const pantsTargets = [];
 const r15ShirtPartNames = ["UpperTorso", "LowerTorso", "LeftUpperArm", "LeftLowerArm", "LeftHand", "RightUpperArm", "RightLowerArm", "RightHand"];
 const r15PantsPartNames = ["LeftUpperLeg", "LeftLowerLeg", "LeftFoot", "RightUpperLeg", "RightLowerLeg", "RightFoot"];
 
-init();
-animate();
+// Global Error Catching for WebView
+window.showError = (msg) => {
+  console.error("AppError:", msg);
+  const overlay = document.getElementById("error-overlay");
+  const msgEl = document.getElementById("error-message");
+  if (overlay && msgEl) {
+    overlay.style.display = "block";
+    msgEl.innerText += "\n> " + msg;
+  }
+};
+
+window.onerror = (message, source, lineno, colno, error) => {
+  window.showError(`${message} (${source}:${lineno})`);
+  return false;
+};
+
+// Start logic
+try {
+  init();
+  animate();
+} catch (err) {
+  window.showError("Init/Animate error: " + err.message);
+}
 
 function init() {
+  window.THREE = THREE; // Để script diagnostic kiểm tra được
   scene = new THREE.Scene();
+
   scene.background = new THREE.Color(0x0b0e11);
 
   const w = canvasMount.clientWidth || window.innerWidth;
   const h = canvasMount.clientHeight || window.innerHeight;
 
   camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
-  camera.position.set(0.8, 1.2, 2.2);
+  camera.position.set(0, 1.2, 3);
 
   renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
@@ -35,7 +61,10 @@ function init() {
 
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
-  controls.target.set(0, 0.8, 0);
+  controls.target.set(0, 1.0, 0);
+  controls.minDistance = 1.0;
+  controls.maxDistance = 6.0;
+  controls.enablePan = false;
 
   ambient = new THREE.AmbientLight(0xffffff, 0.6);
   scene.add(ambient);
@@ -48,13 +77,21 @@ function init() {
   scene.add(grid);
 
   window.addEventListener("resize", onResize);
+  
+  // Kiểm tra WebGL
+  if (!window.WebGLRenderingContext) {
+    window.showError("Trình duyệt này không hỗ trợ WebGL.");
+  }
+
   loadAvatar();
   bindUiEvents();
+  
+  // Force resize after 100ms to ensure canvas matches layout in WebView
+  setTimeout(onResize, 100);
 }
 
+
 function bindUiEvents() {
-  resetViewBtn.addEventListener("click", resetView);
-  screenshotBtn.addEventListener("click", saveScreenshot);
 
   // ── Kotlin Bridge ──────────────────────────────────────
   window.setShirtFromBase64 = (base64) => loadTextureFromBase64(base64, "shirt");
@@ -100,20 +137,27 @@ function loadAvatar() {
       if (pantsNameSet.has(obj.name)) pantsTargets.push(obj);
     });
 
+    console.log("Avatar loaded successfully");
+
     // Demo: tự load áo mẫu để xem thử (giống như Kotlin gọi setShirtFromBase64)
     const demoLoader = new THREE.TextureLoader();
     demoLoader.load("public/image/shirts/1.png", (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.flipY = false;
       applyClothingTexture("shirt", texture);
-    });
-    demoLoader.load("public/image/pants/10.png", (texture) => {
+    }, undefined, (e) => console.warn("Demo shirt failed", e));
+    
+    demoLoader.load("public/image/pants/14.png", (texture) => {
       texture.colorSpace = THREE.SRGBColorSpace;
       texture.flipY = false;
       applyClothingTexture("pants", texture);
-    });
-  }, undefined, (err) => console.error("Avatar load error:", err));
+    }, undefined, (e) => console.warn("Demo pants failed", e));
+    
+  }, undefined, (err) => {
+    window.showError("Avatar load error: " + err.message + "\nPath: public/models/r15.glb");
+  });
 }
+
 
 function applyClothingTexture(type, texture) {
   const targets = type === "shirt" ? shirtTargets : pantsTargets;
@@ -123,24 +167,21 @@ function applyClothingTexture(type, texture) {
   });
 }
 
-function resetView() {
-  controls.target.set(0, 0.8, 0);
-  camera.position.set(0.8, 1.2, 2.2);
-  controls.update();
-}
 
-function saveScreenshot() {
-  const link = document.createElement("a");
-  link.download = "preview.png";
-  link.href = renderer.domElement.toDataURL("image/png");
-  link.click();
-}
 
 function onResize() {
   const w = canvasMount.clientWidth;
   const h = canvasMount.clientHeight;
   if (w && h) {
     camera.aspect = w / h;
+    
+    // Adjust FOV for mobile to ensure character is centered and visible
+    if (w < 600) {
+      camera.fov = 55;
+    } else {
+      camera.fov = 45;
+    }
+    
     camera.updateProjectionMatrix();
     renderer.setSize(w, h);
   }
