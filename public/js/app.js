@@ -13,6 +13,7 @@ const canvasMount = document.getElementById("canvasMount");
 let scene, camera, renderer, controls, grid, ambient, dirLight, avatar;
 const shirtTargets = [];
 const pantsTargets = [];
+const headTargets = [];
 
 const r15ShirtPartNames = ["UpperTorso", "LowerTorso", "LeftUpperArm", "LeftLowerArm", "LeftHand", "RightUpperArm", "RightLowerArm", "RightHand"];
 const r15PantsPartNames = ["LeftUpperLeg", "LeftLowerLeg", "LeftFoot", "RightUpperLeg", "RightLowerLeg", "RightFoot"];
@@ -27,6 +28,7 @@ const CHARACTERS = [
 let currentCharId = "default";
 let currentShirtTexture = null;
 let currentPantsTexture = null;
+let currentFaceTexture = null;
 let isLoading = false;
 
 let compositeCanvas = null;
@@ -264,6 +266,7 @@ function loadAvatar(id) {
     avatar = null;
     shirtTargets.length = 0;
     pantsTargets.length = 0;
+    headTargets.length = 0;
   }
 
   if (char.type === "glb") {
@@ -310,13 +313,15 @@ function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
           pantsTargets.push(child);
         } else if (centroidY < headMinY) {
           shirtTargets.push(child);
+        } else {
+          headTargets.push(child);
         }
-        // else: đầu — giữ màu da mặc định, không push vào targets
       }
     } else {
       // GLB: dùng tên mesh chuẩn của Roblox R15
       if (shirtNameSet.has(child.name)) shirtTargets.push(child);
-      if (pantsNameSet.has(child.name)) pantsTargets.push(child);
+      else if (pantsNameSet.has(child.name)) pantsTargets.push(child);
+      else if (child.name === "Head") headTargets.push(child);
     }
   });
 
@@ -351,7 +356,7 @@ function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
       if (p.maxY < pantsMaxY) {
         pantsTargets.push(p.mesh);
       } else if (p.minY > headMinY) {
-        /* head: skip */
+        headTargets.push(p.mesh);
       } else {
         shirtTargets.push(p.mesh);
       }
@@ -361,12 +366,13 @@ function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
     if (pantsTargets.length === 0 || shirtTargets.length === 0) {
       pantsTargets.length = 0;
       shirtTargets.length = 0;
+      headTargets.length = 0;
       parts.sort((a, b) => a.minY - b.minY);           // đáy thấp nhất trước
       const pantsCount = Math.max(1, Math.round(parts.length * 0.4));
       const headCount  = Math.max(1, Math.round(parts.length * 0.1));
       parts.forEach((p, idx) => {
         if (idx < pantsCount) pantsTargets.push(p.mesh);
-        else if (idx >= parts.length - headCount) { /* head: skip */ }
+        else if (idx >= parts.length - headCount) headTargets.push(p.mesh);
         else shirtTargets.push(p.mesh);
       });
     }
@@ -379,21 +385,29 @@ function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
   // Giữ nguyên quần áo khi đổi nhân vật
   if (currentShirtTexture) applyClothingTexture("shirt", currentShirtTexture);
   if (currentPantsTexture) applyClothingTexture("pants", currentPantsTexture);
+  if (currentFaceTexture) applyFaceTexture();
 
   isLoading = false;
   setLoadingVisible(false);
 
   // Demo textures — chỉ load lần đầu (khi chưa có outfit nào)
-  if (!currentShirtTexture && !currentPantsTexture) {
+  if (!currentShirtTexture && !currentPantsTexture && !currentFaceTexture) {
     const demoLoader = new THREE.TextureLoader();
     demoLoader.load("public/image/shirts/10.png", (tex) => {
       tex.colorSpace = THREE.SRGBColorSpace; tex.flipY = false;
       currentShirtTexture = tex; applyClothingTexture("shirt", tex);
     }, undefined, (e) => console.warn("Demo shirt failed", e));
+    
     demoLoader.load("public/image/pants/20.png", (tex) => {
       tex.colorSpace = THREE.SRGBColorSpace; tex.flipY = false;
       currentPantsTexture = tex; applyClothingTexture("pants", tex);
     }, undefined, (e) => console.warn("Demo pants failed", e));
+
+    // Demo face
+    demoLoader.load("public/image/faces/1.png", (tex) => {
+      tex.colorSpace = THREE.SRGBColorSpace; tex.flipY = false;
+      currentFaceTexture = tex; applyFaceTexture();
+    }, undefined, (e) => console.warn("Demo face failed", e));
   }
 }
 
@@ -481,8 +495,10 @@ function bindUiEvents() {
   // Kotlin Bridge
   window.setShirtFromBase64 = (base64) => loadTextureFromBase64(base64, "shirt");
   window.setPantsFromBase64 = (base64) => loadTextureFromBase64(base64, "pants");
+  window.setFaceFromBase64  = (base64) => loadTextureFromBase64(base64, "face");
   window.clearShirt        = ()       => clearClothingTexture("shirt");
   window.clearPants        = ()       => clearClothingTexture("pants");
+  window.clearFace         = ()       => clearFaceTexture();
   // Expose character switcher to Kotlin
   window.switchCharacter   = switchCharacter;
 }
@@ -493,9 +509,16 @@ function loadTextureFromBase64(base64Data, type) {
   loader.load(dataUri, (texture) => {
     texture.colorSpace = THREE.SRGBColorSpace;
     texture.flipY = false;
-    if (type === "shirt") currentShirtTexture = texture;
-    else currentPantsTexture = texture;
-    applyClothingTexture(type, texture);
+    if (type === "shirt") {
+      currentShirtTexture = texture;
+      applyClothingTexture(type, texture);
+    } else if (type === "pants") {
+      currentPantsTexture = texture;
+      applyClothingTexture(type, texture);
+    } else if (type === "face") {
+      currentFaceTexture = texture;
+      applyFaceTexture();
+    }
   });
 }
 
@@ -538,6 +561,48 @@ function updateCompositeTexture() {
   }
 
   compositeTexture.needsUpdate = true;
+}
+
+let faceCanvas = null;
+let faceCtx = null;
+let faceDisplayTexture = null;
+
+function updateFaceTexture() {
+  if (!faceCanvas) {
+    faceCanvas = document.createElement("canvas");
+    faceCanvas.width = 256;
+    faceCanvas.height = 256;
+    faceCtx = faceCanvas.getContext("2d", { willReadFrequently: true });
+    faceDisplayTexture = new THREE.CanvasTexture(faceCanvas);
+    faceDisplayTexture.colorSpace = THREE.SRGBColorSpace;
+    faceDisplayTexture.flipY = false;
+  }
+
+  faceCtx.fillStyle = "#bfc5d1";
+  faceCtx.fillRect(0, 0, faceCanvas.width, faceCanvas.height);
+
+  if (currentFaceTexture && currentFaceTexture.image) {
+    faceCtx.drawImage(currentFaceTexture.image, 0, 0, faceCanvas.width, faceCanvas.height);
+  }
+  faceDisplayTexture.needsUpdate = true;
+}
+
+function applyFaceTexture() {
+  updateFaceTexture();
+  headTargets.forEach((mesh) => {
+    mesh.material.map = faceDisplayTexture;
+    mesh.material.color.setHex(0xffffff); // Prevent double multiply
+    mesh.material.needsUpdate = true;
+  });
+}
+
+function clearFaceTexture() {
+  currentFaceTexture = null;
+  headTargets.forEach((mesh) => {
+    mesh.material.map = null;
+    mesh.material.color.setHex(0xbfc5d1);
+    mesh.material.needsUpdate = true;
+  });
 }
 
 function clearClothingTexture(type) {
