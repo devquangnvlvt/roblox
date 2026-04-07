@@ -1,0 +1,38 @@
+{
+  "white-skull-spiked-chain-roblox-rfhk1ki2.glb": {
+    "label": "Thắt lưng white skull spiked chain",
+    "attachment": "WaistCenter",
+    "default": {
+      "x": 0,
+      "y": 213,
+      "z": -49,
+      "rx": -6,
+      "ry": 91,
+      "scale": 0.7
+    },
+    "man": {
+      "x": -291,
+      "y": 627,
+      "z": -635,
+      "rx": -6,
+      "ry": 91,
+      "scale": 0.7
+    },
+    "woman": {
+      "x": 0,
+      "y": -98,
+      "z": -49,
+      "rx": -6,
+      "ry": 91,
+      "scale": 0.7
+    },
+    "rounded": {
+      "x": 0,
+      "y": -82,
+      "z": -49,
+      "rx": -6,
+      "ry": 91,
+      "scale": 0.7
+    }
+  }
+}

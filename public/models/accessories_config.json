@@ -1,0 +1,132 @@
+{
+  "sleek-cornrow-hair-roblox-r0e4vdom.glb": {
+    "label": "Tóc Cornrow (Sleek)",
+    "attachment": "Head",
+    "default": {
+      "x": 0,
+      "y": 2,
+      "z": -400,
+      "rx": -90,
+      "ry": 86,
+      "scale": 2.71
+    },
+    "man": {
+      "x": -295,
+      "y": 825,
+      "z": -579,
+      "rx": -0,
+      "ry": 83,
+      "scale": 2.59
+    },
+    "woman": { "x": 2, "y": 96, "z": 2, "rx": 0, "ry": 86, "scale": 2.43 },
+    "rounded": {
+      "x": 2,
+      "y": 123,
+      "z": 2,
+      "rx": -6,
+      "ry": 86,
+      "scale": 2.63
+    }
+  },
+  "blazing-ember-hair-roblox-v69px5bw.glb": {
+    "label": "Tóc Blazing Ember",
+    "attachment": "Head",
+    "default": {
+      "x": 0,
+      "y": 22,
+      "z": -478,
+      "rx": -91,
+      "ry": 129,
+      "scale": 1.97
+    },
+    "man": {
+      "x": -295,
+      "y": 879,
+      "z": -565,
+      "rx": 11,
+      "ry": 129,
+      "scale": 2.2
+    },
+    "woman": { "x": 2, "y": 127, "z": 29, "rx": 20, "ry": 129, "scale": 2.47 },
+    "rounded": {
+      "x": 2,
+      "y": 190,
+      "z": 15,
+      "rx": 3,
+      "ry": 131,
+      "scale": 1.97
+    }
+  },
+  "violet-kawaii-cat-ears-roblox-azyn5925.glb": {
+    "label": "Tóc Violet Kawaii Cat Ears",
+    "attachment": "Head",
+    "default": {
+      "x": 0,
+      "y": 2,
+      "z": -478,
+      "rx": -77,
+      "ry": 69,
+      "scale": 1.97
+    },
+    "man": {
+      "x": -295,
+      "y": 879,
+      "z": -579,
+      "rx": 11,
+      "ry": 60,
+      "scale": 2.01
+    },
+    "woman": {
+      "x": 2,
+      "y": 150,
+      "z": 15,
+      "rx": 20,
+      "ry": 66,
+      "scale": 2.12
+    },
+    "rounded": {
+      "x": 2,
+      "y": 190,
+      "z": 15,
+      "rx": 11,
+      "ry": 74,
+      "scale": 1.97
+    }
+  },
+  "midnight-chaos-hair-roblox-ant5pdbd.glb": {
+    "label": "Tóc Midnight Chaos",
+    "attachment": "Head",
+    "default": {
+      "x": 0,
+      "y": 17,
+      "z": -478,
+      "rx": -77,
+      "ry": 92,
+      "scale": 1.97
+    },
+    "man": {
+      "x": -285,
+      "y": 889,
+      "z": -565,
+      "rx": 11,
+      "ry": 93,
+      "scale": 2.01
+    },
+    "woman": {
+      "x": 2,
+      "y": 150,
+      "z": 21,
+      "rx": 12,
+      "ry": 97,
+      "scale": 2.02
+    },
+    "rounded": {
+      "x": 2,
+      "y": 182,
+      "z": 15,
+      "rx": 11,
+      "ry": 97,
+      "scale": 1.97
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "golden-ram-shoulder-roblox-885qbjsm.glb": {
+    "label": "Vai golden ram",
+    "attachment": "LeftShoulder",
+    "default": {
+      "x": 115,
+      "y": 435,
+      "z": 23,
+      "rx": 21,
+      "ry": 104,
+      "scale": 0.97
+    },
+    "man": {
+      "x": -203,
+      "y": 846,
+      "z": -571,
+      "rx": 20,
+      "ry": 103,
+      "scale": 0.84
+    },
+    "woman": {
+      "x": 75,
+      "y": 75,
+      "z": 2,
+      "rx": 4,
+      "ry": 122,
+      "scale": 0.7
+    },
+    "rounded": {
+      "x": 102,
+      "y": 130,
+      "z": 4,
+      "rx": 6,
+      "ry": 124,
+      "scale": 0.97
+    }
+  },
+  "pixel-cowboy-dragon-roblox-vu243eeq.glb": {
+    "label": "Vai pixel cowboy dragon",
+    "attachment": "LeftShoulder",
+    "default": {
+      "x": 109,
+      "y": 436,
+      "z": -11,
+      "rx": 2,
+      "ry": 91,
+      "scale": 0.75
+    },
+    "man": {
+      "x": -203,
+      "y": 844,
+      "z": -587,
+      "rx": 2,
+      "ry": 103,
+      "scale": 0.75
+    },
+    "woman": {
+      "x": 75,
+      "y": 75,
+      "z": 2,
+      "rx": 4,
+      "ry": 122,
+      "scale": 0.75
+    },
+    "rounded": {
+      "x": 102,
+      "y": 130,
+      "z": 4,
+      "rx": 5,
+      "ry": 93,
+      "scale": 0.75
+    }
+  }
+}

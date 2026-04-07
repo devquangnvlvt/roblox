@@ -1,0 +1,146 @@
+{
+  "silver-gemstone-sunglasses-roblox-zqwosfxb.glb": {
+    "label": "Kính Silver Gemstone",
+    "attachment": "FaceCenter",
+    "default": {
+      "x": 0,
+      "y": 460,
+      "z": -12,
+      "rx": -4,
+      "ry": 115,
+      "scale": 1.16
+    },
+    "man": {
+      "x": -290,
+      "y": 874,
+      "z": -596,
+      "rx": 0,
+      "ry": 117,
+      "scale": 1.03
+    },
+    "woman": {
+      "x": -2,
+      "y": 122,
+      "z": 2,
+      "rx": -7,
+      "ry": 115,
+      "scale": 1.16
+    },
+    "rounded": {
+      "x": 2,
+      "y": 171,
+      "z": -9,
+      "rx": -6,
+      "ry": 119,
+      "scale": 1.12
+    }
+  },
+  "stellar-eclipse-sunglasses-roblox-ykatfxjf.glb": {
+    "label": "Kính Stellar Eclipse",
+    "attachment": "FaceCenter",
+    "default": {
+      "x": 2,
+      "y": 460,
+      "z": -12,
+      "rx": -6,
+      "ry": 143,
+      "scale": 1.19
+    },
+    "man": {
+      "x": -290,
+      "y": 873,
+      "z": -603,
+      "rx": 0,
+      "ry": 143,
+      "scale": 1.03
+    },
+    "woman": {
+      "x": -2,
+      "y": 118,
+      "z": -3,
+      "rx": -7,
+      "ry": 141,
+      "scale": 1.19
+    },
+    "rounded": {
+      "x": -1,
+      "y": 171,
+      "z": -14,
+      "rx": -6,
+      "ry": 140,
+      "scale": 1.12
+    }
+  },
+  "frostbite-skull-roblox-w5db1xj7.glb": {
+    "label": "Mặt Frostbite Skull",
+    "attachment": "FaceCenter",
+    "default": {
+      "x": 2,
+      "y": 445,
+      "z": -52,
+      "rx": -2,
+      "ry": 107,
+      "scale": 1.57
+    },
+    "man": {
+      "x": -290,
+      "y": 858,
+      "z": -633,
+      "rx": 2,
+      "ry": 107,
+      "scale": 1.66
+    },
+    "woman": {
+      "x": 0,
+      "y": 125,
+      "z": -43,
+      "rx": -7,
+      "ry": 107,
+      "scale": 1.68
+    },
+    "rounded": {
+      "x": 0,
+      "y": 151,
+      "z": -46,
+      "rx": 3,
+      "ry": 110,
+      "scale": 1.74
+    }
+  },
+  "sinister-clown-mask-roblox-tb9y0vbh.glb": {
+    "label": "Mặt Sinister Clown Mask",
+    "attachment": "FaceCenter",
+    "default": {
+      "x": 2,
+      "y": 445,
+      "z": -52,
+      "rx": -2,
+      "ry": 55,
+      "scale": 1.96
+    },
+    "man": {
+      "x": -290,
+      "y": 858,
+      "z": -633,
+      "rx": 2,
+      "ry": 55,
+      "scale": 1.66
+    },
+    "woman": {
+      "x": 0,
+      "y": 125,
+      "z": -43,
+      "rx": -7,
+      "ry": 60,
+      "scale": 1.68
+    },
+    "rounded": {
+      "x": 0,
+      "y": 151,
+      "z": -46,
+      "rx": 3,
+      "ry": 55,
+      "scale": 1.74
+    }
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "mystic-green-helmet-roblox-40pgked5.glb": {
+    "label": "Mũ mystic green helmet",
+    "attachment": "Hat",
+    "default": {
+      "x": 0,
+      "y": 459,
+      "z": -11,
+      "rx": 2,
+      "ry": 48,
+      "scale": 2.69
+    },
+    "man": {
+      "x": -290,
+      "y": 871,
+      "z": -616,
+      "rx": 2,
+      "ry": 53,
+      "scale": 2.69
+    },
+    "woman": {
+      "x": 0,
+      "y": 114,
+      "z": -30,
+      "rx": 7,
+      "ry": 50,
+      "scale": 2.55
+    },
+    "rounded": {
+      "x": 102,
+      "y": 130,
+      "z": 4,
+      "rx": 5,
+      "ry": 93,
+      "scale": 2.69
+    }
+  },
+  "crimson-antler-helmet-roblox-te1xh5xq.glb": {
+    "label": "Mũ crimson antler helmet",
+    "attachment": "Head",
+    "default": {
+      "x": 0,
+      "y": 10,
+      "z": -541,
+      "rx": -94,
+      "ry": 109,
+      "scale": 2.47
+    },
+    "man": {
+      "x": -292,
+      "y": 944,
+      "z": -565,
+      "rx": 11,
+      "ry": 106,
+      "scale": 2.83
+    },
+    "woman": {
+      "x": 2,
+      "y": 197,
+      "z": 15,
+      "rx": 4,
+      "ry": 112,
+      "scale": 2.94
+    },
+    "rounded": {
+      "x": 2,
+      "y": 226,
+      "z": 20,
+      "rx": 11,
+      "ry": 113,
+      "scale": 2.96
+    }
+  },
+  "celestial-winged-helm-roblox-uxgjz0es.glb": {
+    "label": "Mũ celestial winged helm",
+    "attachment": "Head",
+    "default": {
+      "x": 0,
+      "y": 13,
+      "z": -517,
+      "rx": -94,
+      "ry": 120,
+      "scale": 2.7
+    },
+    "man": {
+      "x": -292,
+      "y": 926,
+      "z": -553,
+      "rx": 11,
+      "ry": 118,
+      "scale": 2.84
+    },
+    "woman": {
+      "x": 2,
+      "y": 177,
+      "z": 15,
+      "rx": 4,
+      "ry": 122,
+      "scale": 2.65
+    },
+    "rounded": {
+      "x": 2,
+      "y": 206,
+      "z": 20,
+      "rx": 6,
+      "ry": 124,
+      "scale": 2.78
+    }
+  },
+  "spiked-emo-cap-roblox-99c5njap.glb": {
+    "label": "Mũ spiked emo cap",
+    "attachment": "Head",
+    "default": {
+      "x": 0,
+      "y": -28,
+      "z": -517,
+      "rx": -94,
+      "ry": 120,
+      "scale": 1.95
+    },
+    "man": {
+      "x": -288,
+      "y": 927,
+      "z": -606,
+      "rx": 11,
+      "ry": 118,
+      "scale": 1.79
+    },
+    "woman": {
+      "x": 0,
+      "y": 186,
+      "z": -26,
+      "rx": 5,
+      "ry": 129,
+      "scale": 1.8
+    },
+    "rounded": {
+      "x": 0,
+      "y": 208,
+      "z": -18,
+      "rx": 11,
+      "ry": 118,
+      "scale": 1.95
+    }
+  }
+}

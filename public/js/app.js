@@ -56,8 +56,49 @@ let faceScaleY = 1.0;
 
 // New States for Part 6
 let currentEnvMode = "dark";
-const accessories = [];
+const activeAccessories = {
+  hair: null,
+  glasses: null,
+  wings: null,
+  neck: null,
+  righthand: null,
+  lefthand: null,
+  shoulder: null,
+  hat: null,
+  waist: null
+};
+let activeTuningCategory = "hair";
+const activeCategoryModels = {
+  hair: null,
+  glasses: null,
+  wings: null,
+  neck: null,
+  righthand: null,
+  lefthand: null,
+  shoulder: null,
+  hat: null,
+  waist: null
+};
 
+// New States for Accessory Adjustment
+let accOffsetX = 0;
+let accOffsetY = 0;
+let accOffsetZ = 0;
+let accRotationX = 0;
+let accRotationY = 0;
+let accRotationZ = 0;
+let accScale = 1.0;
+
+// Accessory Map for dynamic loading
+let accessoryConfigMap = {};
+let glassesConfigMap = {};
+let wingsConfigMap = {};
+let neckConfigMap = {};
+let righthandConfigMap = {};
+let lefthandConfigMap = {};
+let shoulderConfigMap = {};
+let hatConfigMap = {};
+let waistConfigMap = {};
 
 let compositeCanvas = null;
 let compositeCtx = null;
@@ -142,8 +183,289 @@ function init() {
   injectControlPanel();
   loadAvatar(currentCharId);
   bindUiEvents();
+  loadAccessoryConfigs(); // Load JSON config at start
 
   setTimeout(onResize, 100);
+}
+
+async function loadAccessoryConfigs() {
+  try {
+    const res = await fetch("public/models/accessories_config.json");
+    if (!res.ok) throw new Error("Could not find accessories_config.json");
+    accessoryConfigMap = await res.json();
+    console.log("Accessory configurations loaded:", Object.keys(accessoryConfigMap).length);
+    
+    try {
+      const gRes = await fetch("public/models/glasses_config.json");
+      if (gRes.ok) {
+        glassesConfigMap = await gRes.json();
+        console.log("Glasses configurations loaded:", Object.keys(glassesConfigMap).length);
+      }
+    } catch(e) { console.warn("No glasses config found"); }
+    
+    try {
+      const wRes = await fetch("public/models/wings_config.json");
+      if (wRes.ok) {
+        wingsConfigMap = await wRes.json();
+        console.log("Wings configurations loaded:", Object.keys(wingsConfigMap).length);
+      }
+    } catch(e) { console.warn("No wings config found"); }
+
+    try {
+      const nRes = await fetch("public/models/neck_config.json");
+      if (nRes.ok) {
+        neckConfigMap = await nRes.json();
+        console.log("Neck configurations loaded:", Object.keys(neckConfigMap).length);
+      }
+    } catch(e) { console.warn("No neck config found"); }
+
+    try {
+      const rhRes = await fetch("public/models/righthand_config.json");
+      if (rhRes.ok) {
+        righthandConfigMap = await rhRes.json();
+        console.log("RightHand configurations loaded:", Object.keys(righthandConfigMap).length);
+      }
+    } catch(e) { console.warn("No righthand config found"); }
+
+    try {
+      const lhRes = await fetch("public/models/lefthand_config.json");
+      if (lhRes.ok) {
+        lefthandConfigMap = await lhRes.json();
+        console.log("LeftHand configurations loaded:", Object.keys(lefthandConfigMap).length);
+      }
+    } catch(e) { console.warn("No lefthand config found"); }
+
+    try {
+      const shRes = await fetch("public/models/shoulder_config.json");
+      if (shRes.ok) {
+        shoulderConfigMap = await shRes.json();
+        console.log("Shoulder configurations loaded:", Object.keys(shoulderConfigMap).length);
+      }
+    } catch(e) { console.warn("No shoulder config found"); }
+
+    try {
+      const hRes = await fetch("public/models/hat_config.json");
+      if (hRes.ok) {
+        hatConfigMap = await hRes.json();
+        console.log("Hat configurations loaded:", Object.keys(hatConfigMap).length);
+      }
+    } catch(e) { console.warn("No hat config found"); }
+
+    try {
+      const waistRes = await fetch("public/models/waist_config.json");
+      if (waistRes.ok) {
+        waistConfigMap = await waistRes.json();
+        console.log("Waist configurations loaded:", Object.keys(waistConfigMap).length);
+      }
+    } catch(e) { console.warn("No waist config found"); }
+    
+    populateAccessoryButtons();
+  } catch (err) {
+    console.warn("Accessory Config error:", err.message);
+    const list = document.getElementById("hair-list");
+    if (list) list.innerHTML = `<span style="font-size:11px;opacity:0.4">Không tải được danh sách config</span>`;
+  }
+}
+
+function populateAccessoryButtons() {
+  const selHair = document.getElementById("hair-select");
+  const selGlasses = document.getElementById("glasses-select");
+  const selWings = document.getElementById("wings-select");
+  const selNeck = document.getElementById("neck-select");
+  const selRighthand = document.getElementById("righthand-select");
+  const selLefthand = document.getElementById("lefthand-select");
+  const selShoulder = document.getElementById("shoulder-select");
+  const selHat = document.getElementById("hat-select");
+  const selWaist = document.getElementById("waist-select");
+    if (!selHair || !selGlasses || !selWings || !selNeck || !selRighthand || !selLefthand || !selShoulder || !selHat || !selWaist) return;
+
+  // Xóa option cũ, giữ option đầu tiên
+  selHair.innerHTML = `<option value="">-- Chưa chọn --</option>`;
+  selGlasses.innerHTML = `<option value="">-- Chưa chọn --</option>`;
+  selWings.innerHTML = `<option value="">-- Chưa chọn --</option>`;
+  selNeck.innerHTML = `<option value="">-- Chưa chọn --</option>`;
+  selRighthand.innerHTML = `<option value="">-- Chưa chọn --</option>`;
+  selLefthand.innerHTML = `<option value="">-- Chưa chọn --</option>`;
+  selShoulder.innerHTML = `<option value="">-- Chưa chọn --</option>`;
+  selHat.innerHTML = `<option value="">-- Chưa chọn --</option>`;
+  selWaist.innerHTML = `<option value="">-- Chưa chọn --</option>`;
+  Object.entries(accessoryConfigMap).forEach(([filename, config]) => {
+    const opt = document.createElement("option");
+    opt.value = filename;
+    opt.textContent = config.label || filename;
+    selHair.appendChild(opt);
+  });
+
+  Object.entries(glassesConfigMap).forEach(([filename, config]) => {
+    const opt = document.createElement("option");
+    opt.value = filename;
+    opt.textContent = config.label || filename;
+    selGlasses.appendChild(opt);
+  });
+
+  Object.entries(wingsConfigMap).forEach(([filename, config]) => {
+    const opt = document.createElement("option");
+    opt.value = filename;
+    opt.textContent = config.label || filename;
+    selWings.appendChild(opt);
+  });
+
+  Object.entries(neckConfigMap).forEach(([filename, config]) => {
+    const opt = document.createElement("option");
+    opt.value = filename;
+    opt.textContent = config.label || filename;
+    selNeck.appendChild(opt);
+  });
+
+  Object.entries(righthandConfigMap).forEach(([filename, config]) => {
+    const opt = document.createElement("option");
+    opt.value = filename;
+    opt.textContent = config.label || filename;
+    selRighthand.appendChild(opt);
+  });
+ Object.entries(lefthandConfigMap).forEach(([filename, config]) => {
+    const opt = document.createElement("option");
+    opt.value = filename;
+    opt.textContent = config.label || filename;
+    selLefthand.appendChild(opt);
+  });
+
+  Object.entries(shoulderConfigMap).forEach(([filename, config]) => {
+    const opt = document.createElement("option");
+    opt.value = filename;
+    opt.textContent = config.label || filename;
+    selShoulder.appendChild(opt);
+  });
+
+  Object.entries(hatConfigMap).forEach(([filename, config]) => {
+    const opt = document.createElement("option");
+    opt.value = filename;
+    opt.textContent = config.label || filename;
+    selHat.appendChild(opt);
+  });
+
+  Object.entries(waistConfigMap).forEach(([filename, config]) => {
+    const opt = document.createElement("option");
+    opt.value = filename;
+    opt.textContent = config.label || filename;
+    selWaist.appendChild(opt);
+  });
+  selHair.addEventListener("change", () => {
+    const filename = selHair.value;
+    clearAccessoryByCategory("hair");
+    if (!filename) return;
+
+    activeTuningCategory = "hair";
+    document.getElementById("lbl-tuning-target").textContent = "🎯 Đang chỉnh: Tóc";
+    activeAccessories.hair = filename;
+
+    const config = accessoryConfigMap[filename];
+    loadAccessoryFromFile("public/image/hair/" + filename, "hair", (config && config.attachment) || "Head", config);
+  });
+
+  selGlasses.addEventListener("change", () => {
+    const filename = selGlasses.value;
+    clearAccessoryByCategory("glasses");
+    if (!filename) return;
+
+    activeTuningCategory = "glasses";
+    document.getElementById("lbl-tuning-target").textContent = "🎯 Đang chỉnh: Kính";
+    activeAccessories.glasses = filename;
+
+    const config = glassesConfigMap[filename];
+    loadAccessoryFromFile("public/image/glasses/" + filename, "glasses", (config && config.attachment) || "FaceCenter", config);
+  });
+
+  selWings.addEventListener("change", () => {
+    const filename = selWings.value;
+    clearAccessoryByCategory("wings");
+    if (!filename) return;
+
+    activeTuningCategory = "wings";
+    document.getElementById("lbl-tuning-target").textContent = "🎯 Đang chỉnh: Cánh";
+    activeAccessories.wings = filename;
+
+    const config = wingsConfigMap[filename];
+    loadAccessoryFromFile("public/image/wing/" + filename, "wings", (config && config.attachment) || "BodyBack", config);
+  });
+
+  selNeck.addEventListener("change", () => {
+    const filename = selNeck.value;
+    clearAccessoryByCategory("neck");
+    if (!filename) return;
+
+    activeTuningCategory = "neck";
+    document.getElementById("lbl-tuning-target").textContent = "🎯 Đang chỉnh: Vòng cổ";
+    activeAccessories.neck = filename;
+
+    const config = neckConfigMap[filename];
+    loadAccessoryFromFile("public/image/neck/" + filename, "neck", (config && config.attachment) || "Neck", config);
+  });
+
+  selRighthand.addEventListener("change", () => {
+    const filename = selRighthand.value;
+    clearAccessoryByCategory("righthand");
+    if (!filename) return;
+
+    activeTuningCategory = "righthand";
+    document.getElementById("lbl-tuning-target").textContent = "🎯 Đang chỉnh: Tay phải";
+    activeAccessories.righthand = filename;
+
+    const config = righthandConfigMap[filename];
+    loadAccessoryFromFile("public/image/righthand/" + filename, "righthand", (config && config.attachment) || "RightGrip", config);
+  });
+
+  selLefthand.addEventListener("change", () => {
+    const filename = selLefthand.value;
+    clearAccessoryByCategory("lefthand");
+    if (!filename) return;
+
+    activeTuningCategory = "lefthand";
+    document.getElementById("lbl-tuning-target").textContent = "🎯 Đang chỉnh: Tay trái";
+    activeAccessories.lefthand = filename;
+
+    const config = lefthandConfigMap[filename];
+    loadAccessoryFromFile("public/image/lefthand/" + filename, "lefthand", (config && config.attachment) || "LeftGrip", config);
+  });
+
+  selShoulder.addEventListener("change", () => {
+    const filename = selShoulder.value;
+    clearAccessoryByCategory("shoulder");
+    if (!filename) return;
+
+    activeTuningCategory = "shoulder";
+    document.getElementById("lbl-tuning-target").textContent = "🎯 Đang chỉnh: Vai";
+    activeAccessories.shoulder = filename;
+
+    const config = shoulderConfigMap[filename];
+    loadAccessoryFromFile("public/image/shoulder/" + filename, "shoulder", (config && config.attachment) || "LeftShoulder", config);
+  });
+
+  selHat.addEventListener("change", () => {
+    const filename = selHat.value;
+    clearAccessoryByCategory("hat");
+    if (!filename) return;
+
+    activeTuningCategory = "hat";
+    document.getElementById("lbl-tuning-target").textContent = "🎯 Đang chỉnh: Mũ";
+    activeAccessories.hat = filename;
+
+    const config = hatConfigMap[filename];
+    loadAccessoryFromFile("public/image/hat/" + filename, "hat", (config && config.attachment) || "Hat", config);
+  });
+
+  selWaist.addEventListener("change", () => {
+    const filename = selWaist.value;
+    clearAccessoryByCategory("waist");
+    if (!filename) return;
+
+    activeTuningCategory = "waist";
+    document.getElementById("lbl-tuning-target").textContent = "🎯 Đang chỉnh: Thắt lưng";
+    activeAccessories.waist = filename;
+
+    const config = waistConfigMap[filename];
+    loadAccessoryFromFile("public/image/waist/" + filename, "waist", (config && config.attachment) || "WaistCenter", config);
+  });
 }
 
 // ── Character Switcher UI ────────────────────────────────────────────────────
@@ -272,6 +594,7 @@ function switchCharacter(id) {
   currentCharId = id;
   setActiveCharBtn(id);
   loadAvatar(id);
+
 }
 
 // ── Load avatar (GLB or OBJ) ─────────────────────────────────────────────────
@@ -283,7 +606,15 @@ function loadAvatar(id) {
   setLoadingVisible(true);
 
   // Clear accessories when changing character
-  clearAccessories();
+  clearAccessoryByCategory("hair", false);
+  clearAccessoryByCategory("glasses", false);
+  clearAccessoryByCategory("wings", false);
+  clearAccessoryByCategory("neck", false);
+  clearAccessoryByCategory("righthand", false);
+  clearAccessoryByCategory("lefthand", false);
+  clearAccessoryByCategory("shoulder", false);
+  clearAccessoryByCategory("hat", false);
+  clearAccessoryByCategory("waist", false);
 
   // Remove old avatar
   if (avatar) {
@@ -453,10 +784,66 @@ function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
     }, undefined, (e) => console.warn("Demo pants failed", e));
 
     // Demo face
-    demoLoader.load("public/image/faces/2.png", (tex) => {
+    demoLoader.load("public/image/faces/1.png", (tex) => {
       tex.colorSpace = THREE.SRGBColorSpace; tex.flipY = false;
       currentFaceTexture = tex; applyFaceTexture();
     }, undefined, (e) => console.warn("Demo face failed", e));
+  }
+
+  // Reload tất cả phụ kiện đang active với tọa độ của nhân vật mới
+  if (activeAccessories.hair) {
+    const filename = activeAccessories.hair;
+    const config = accessoryConfigMap[filename];
+    clearAccessoryByCategory("hair", false);
+    loadAccessoryFromFile("public/image/hair/" + filename, "hair", (config && config.attachment) || "Head", config);
+  }
+  if (activeAccessories.glasses) {
+    const filename = activeAccessories.glasses;
+    const config = glassesConfigMap[filename];
+    clearAccessoryByCategory("glasses", false);
+    loadAccessoryFromFile("public/image/glasses/" + filename, "glasses", (config && config.attachment) || "FaceCenter", config);
+  }
+  if (activeAccessories.wings) {
+    const filename = activeAccessories.wings;
+    const config = wingsConfigMap[filename];
+    clearAccessoryByCategory("wings", false);
+    loadAccessoryFromFile("public/image/wing/" + filename, "wings", (config && config.attachment) || "BodyBack", config);
+  }
+  if (activeAccessories.neck) {
+    const filename = activeAccessories.neck;
+    const config = neckConfigMap[filename];
+    clearAccessoryByCategory("neck", false);
+    loadAccessoryFromFile("public/image/neck/" + filename, "neck", (config && config.attachment) || "Neck", config);
+  }
+  if (activeAccessories.righthand) {
+    const filename = activeAccessories.righthand;
+    const config = righthandConfigMap[filename];
+    clearAccessoryByCategory("righthand", false);
+    loadAccessoryFromFile("public/image/righthand/" + filename, "righthand", (config && config.attachment) || "RightGrip", config);
+  }
+  if (activeAccessories.lefthand) {
+    const filename = activeAccessories.lefthand;
+    const config = lefthandConfigMap[filename];
+    clearAccessoryByCategory("lefthand", false);
+    loadAccessoryFromFile("public/image/lefthand/" + filename, "lefthand", (config && config.attachment) || "LeftGrip", config);
+  }
+  if (activeAccessories.shoulder) {
+    const filename = activeAccessories.shoulder;
+    const config = shoulderConfigMap[filename];
+    clearAccessoryByCategory("shoulder", false);
+    loadAccessoryFromFile("public/image/shoulder/" + filename, "shoulder", (config && config.attachment) || "LeftShoulder", config);
+  }
+  if (activeAccessories.hat) {
+    const filename = activeAccessories.hat;
+    const config = hatConfigMap[filename];
+    clearAccessoryByCategory("hat", false);
+    loadAccessoryFromFile("public/image/hat/" + filename, "hat", (config && config.attachment) || "Hat", config);
+  }
+  if (activeAccessories.waist) {
+    const filename = activeAccessories.waist;
+    const config = waistConfigMap[filename];
+    clearAccessoryByCategory("waist", false);
+    loadAccessoryFromFile("public/image/waist/" + filename, "waist", (config && config.attachment) || "WaistCenter", config);
   }
 }
 
@@ -846,52 +1233,158 @@ function injectControlPanel() {
       accent-color: #E63946;
       cursor: pointer;
     }
+    .num-input {
+      width: 48px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: white;
+      border-radius: 4px;
+      font-size: 11px;
+      padding: 3px;
+      text-align: right;
+    }
   `;
   document.head.appendChild(style);
 
   panel.innerHTML = `
     <div class="panel-section">
-      <div class="panel-title">Môi Trường</div>
-      <div class="theme-grid">
-        <div class="theme-circle active" data-theme="dark" style="background:#11151c" title="Dark"></div>
-        <div class="theme-circle" data-theme="light" style="background:#f0f2f5" title="Light"></div>
-        <div class="theme-circle" data-theme="studio" style="background:#555b6e" title="Studio"></div>
-        <div class="theme-circle" data-theme="sunset" style="background:linear-gradient(to bottom, #ff9e00, #ff0054)" title="Sunset"></div>
-      </div>
-    </div>
+      <div class="panel-title">🎀 Chọn Tóc</div>
+      <select id="hair-select" style="
+        width:100%; padding:8px 10px;
+        border:1px solid rgba(255,255,255,0.15);
+        border-radius:8px; 
+        font-size:12px; font-family:Inter,sans-serif;
+        cursor:pointer; outline:none;
+        appearance:none; -webkit-appearance:none;
+      ">
+        <option value="">-- Chưa chọn --</option>
+      </select>
+      
+      <div class="panel-title" style="margin-top:8px">🕶️ Chọn Kính</div>
+      <select id="glasses-select" style="
+        width:100%; padding:8px 10px;
+        border:1px solid rgba(255,255,255,0.15);
+        border-radius:8px; 
+        font-size:12px; font-family:Inter,sans-serif;
+        cursor:pointer; outline:none;
+        appearance:none; -webkit-appearance:none;
+      ">
+        <option value="">-- Chưa chọn --</option>
+      </select>
 
-    <div class="panel-section">
-      <div class="panel-title">Tùy Chỉnh Khuôn Mặt</div>
-      <div class="slider-container">
+      <div class="panel-title" style="margin-top:8px">🦅 Chọn Cánh</div>
+      <select id="wings-select" style="
+        width:100%; padding:8px 10px;
+        border:1px solid rgba(255,255,255,0.15);
+        border-radius:8px; 
+        font-size:12px; font-family:Inter,sans-serif;
+        cursor:pointer; outline:none;
+        appearance:none; -webkit-appearance:none;
+      ">
+        <option value="">-- Chưa chọn --</option>
+      </select>
+
+      <div class="panel-title" style="margin-top:8px">💎 Chọn Vòng cổ</div>
+      <select id="neck-select" style="
+        width:100%; padding:8px 10px;
+        border:1px solid rgba(255,255,255,0.15);
+        border-radius:8px; 
+        font-size:12px; font-family:Inter,sans-serif;
+        cursor:pointer; outline:none;
+        appearance:none; -webkit-appearance:none;
+      ">
+        <option value="">-- Chưa chọn --</option>
+      </select>
+
+      <div class="panel-title" style="margin-top:8px">🗡️ Tay phải</div>
+      <select id="righthand-select" style="
+        width:100%; padding:8px 10px;
+        border:1px solid rgba(255,255,255,0.15);
+        border-radius:8px; 
+        font-size:12px; font-family:Inter,sans-serif;
+        cursor:pointer; outline:none;
+        appearance:none; -webkit-appearance:none;
+      ">
+        <option value="">-- Chưa chọn --</option>
+      </select>
+      <div class="panel-title" style="margin-top:8px">🗡️ Tay trái</div>
+      <select id="lefthand-select" style="
+        width:100%; padding:8px 10px;
+        border:1px solid rgba(255,255,255,0.15);
+        border-radius:8px; 
+        font-size:12px; font-family:Inter,sans-serif;
+        cursor:pointer; outline:none;
+        appearance:none; -webkit-appearance:none;
+      ">
+        <option value="">-- Chưa chọn --</option>
+      </select>
+
+      <div class="panel-title" style="margin-top:8px">🐘 Chọn Vai</div>
+      <select id="shoulder-select" style="
+        width:100%; padding:8px 10px;
+        border:1px solid rgba(255,255,255,0.15);
+        border-radius:8px; 
+        font-size:12px; font-family:Inter,sans-serif;
+        cursor:pointer; outline:none;
+        appearance:none; -webkit-appearance:none;
+      ">
+        <option value="">-- Chưa chọn --</option>
+      </select>
+
+      <div class="panel-title" style="margin-top:8px">🎩 Chọn Mũ</div>
+      <select id="hat-select" style="
+        width:100%; padding:8px 10px;
+        border:1px solid rgba(255,255,255,0.15);
+        border-radius:8px; 
+        font-size:12px; font-family:Inter,sans-serif;
+        cursor:pointer; outline:none;
+        appearance:none; -webkit-appearance:none;
+      ">
+        <option value="">-- Chưa chọn --</option>
+      </select>
+
+      <div class="panel-title" style="margin-top:8px">🥋 Chọn Thắt lưng</div>
+      <select id="waist-select" style="
+        width:100%; padding:8px 10px;
+        border:1px solid rgba(255,255,255,0.15);
+        border-radius:8px; 
+        font-size:12px; font-family:Inter,sans-serif;
+        cursor:pointer; outline:none;
+        appearance:none; -webkit-appearance:none;
+      ">
+        <option value="">-- Chưa chọn --</option>
+      </select>
+
+      <div style="display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;">
+        <button class="panel-btn" id="btn-clear-hair" style="flex:1; min-width:30%; padding:6px 0; text-align:center;">❌ Tóc</button>
+        <button class="panel-btn" id="btn-clear-glasses" style="flex:1; min-width:30%; padding:6px 0; text-align:center;">❌ Kính</button>
+        <button class="panel-btn" id="btn-clear-wings" style="flex:1; min-width:30%; padding:6px 0; text-align:center;">❌ Cánh</button>
+        <button class="panel-btn" id="btn-clear-neck" style="flex:1; min-width:30%; padding:6px 0; text-align:center;">❌ Cổ</button>
+        <button class="panel-btn" id="btn-clear-righthand" style="flex:1; min-width:30%; padding:6px 0; text-align:center;">❌ Tay phải</button>
+        <button class="panel-btn" id="btn-clear-lefthand" style="flex:1; min-width:30%; padding:6px 0; text-align:center;">❌ Tay trái</button>
+        <button class="panel-btn" id="btn-clear-shoulder" style="flex:1; min-width:30%; padding:6px 0; text-align:center;">❌ Vai</button>
+        <button class="panel-btn" id="btn-clear-hat" style="flex:1; min-width:30%; padding:6px 0; text-align:center;">❌ Mũ</button>
+        <button class="panel-btn" id="btn-clear-waist" style="flex:1; min-width:30%; padding:6px 0; text-align:center;">❌ Eo</button>
+      </div>
+
+      <div class="panel-title" id="lbl-tuning-target" style="margin-top:10px; color:#E63946; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:4px;">🎯 Đang chỉnh: Tóc</div>
+      <div class="slider-container" style="margin-top:6px">
         <span>Vị trí X (Ngang)</span>
-        <div class="slider-row">
-          <input type="range" id="face-x" min="-100" max="100" value="0">
-        </div>
+        <div class="slider-row"><input type="range" id="acc-x" min="-700" max="1000" value="0"><input type="number" id="acc-x-num" min="-700" max="1000" value="0" class="num-input"></div>
         <span>Vị trí Y (Dọc)</span>
-        <div class="slider-row">
-          <input type="range" id="face-y" min="-100" max="100" value="0">
-        </div>
-        <span>Độ rộng (X)</span>
-        <div class="slider-row">
-          <input type="range" id="face-sx" min="50" max="150" value="100">
-        </div>
-        <span>Độ cao (Y)</span>
-        <div class="slider-row">
-          <input type="range" id="face-sy" min="50" max="150" value="100">
-        </div>
+        <div class="slider-row"><input type="range" id="acc-y" min="-900" max="1000" value="0"><input type="number" id="acc-y-num" min="-700" max="1000" value="0" class="num-input"></div>
+        <span>Vị trí Z (Sâu)</span>
+        <div class="slider-row"><input type="range" id="acc-z" min="-900" max="1000" value="0"><input type="number" id="acc-z-num" min="-900" max="1000" value="0" class="num-input"></div>
+        <span>Xoay (Trục X)</span>
+        <div class="slider-row"><input type="range" id="acc-rx" min="-300" max="300" value="0"><input type="number" id="acc-rx-num" min="-300" max="300" value="0" class="num-input"></div>
+        <span>Xoay (Trục Y)</span>
+        <div class="slider-row"><input type="range" id="acc-ry" min="-300" max="300" value="0"><input type="number" id="acc-ry-num" min="-300" max="300" value="0" class="num-input"></div>
+        <span>Phóng to (Scale)</span>
+        <div class="slider-row"><input type="range" id="acc-scale" min="10" max="500" value="100"><input type="number" id="acc-scale-num" min="10" max="500" value="100" class="num-input"></div>
       </div>
     </div>
 
     <div class="panel-section">
-      <div class="panel-title">Phụ Kiện Thông Minh</div>
-      <div class="theme-grid" style="grid-template-columns: 1fr 1fr">
-        <button class="panel-btn" id="btn-smart-glasses">🕶 Kính</button>
-        <button class="panel-btn" id="btn-smart-mask">😷 Bịt mặt</button>
-      </div>
-      <button class="panel-btn" id="btn-clear-acc" style="margin-top:4px">❌ Xóa Trang Sức</button>
-    </div>
-
-     <div class="panel-section">
       <div class="panel-title">Hiển Thị</div>
       <button class="panel-btn" id="btn-toggle-grid">Toggle Grid</button>
     </div>
@@ -900,38 +1393,119 @@ function injectControlPanel() {
   document.body.appendChild(panel);
 
   // Events
-  document.querySelectorAll(".theme-circle").forEach(circle => {
-    circle.addEventListener("click", function () {
-      document.querySelectorAll(".theme-circle").forEach(c => c.classList.remove("active"));
-      this.classList.add("active");
-      updateEnvironment(this.getAttribute("data-theme"));
-    });
+  document.getElementById("btn-clear-hair").addEventListener("click", () => {
+    clearAccessoryByCategory("hair");
+    const sel = document.getElementById("hair-select");
+    if (sel) sel.value = "";
   });
-
-  document.getElementById("btn-smart-glasses").addEventListener("click", () => addSmartAccessory("Glasses"));
-  document.getElementById("btn-smart-mask").addEventListener("click", () => addSmartAccessory("Mask"));
-  document.getElementById("btn-clear-acc").addEventListener("click", clearAccessories);
+  document.getElementById("btn-clear-glasses").addEventListener("click", () => {
+    clearAccessoryByCategory("glasses");
+    const sel = document.getElementById("glasses-select");
+    if (sel) sel.value = "";
+  });
+  document.getElementById("btn-clear-wings").addEventListener("click", () => {
+    clearAccessoryByCategory("wings");
+    const sel = document.getElementById("wings-select");
+    if (sel) sel.value = "";
+  });
+  document.getElementById("btn-clear-neck").addEventListener("click", () => {
+    clearAccessoryByCategory("neck");
+    const sel = document.getElementById("neck-select");
+    if (sel) sel.value = "";
+  });
+  document.getElementById("btn-clear-righthand").addEventListener("click", () => {
+    clearAccessoryByCategory("righthand");
+    const sel = document.getElementById("righthand-select");
+    if (sel) sel.value = "";
+  });
+  document.getElementById("btn-clear-shoulder").addEventListener("click", () => {
+    clearAccessoryByCategory("shoulder");
+    const sel = document.getElementById("shoulder-select");
+    if (sel) sel.value = "";
+  });
+  document.getElementById("btn-clear-hat").addEventListener("click", () => {
+    clearAccessoryByCategory("hat");
+    const sel = document.getElementById("hat-select");
+    if (sel) sel.value = "";
+  });
+  document.getElementById("btn-clear-waist").addEventListener("click", () => {
+    clearAccessoryByCategory("waist");
+    const sel = document.getElementById("waist-select");
+    if (sel) sel.value = "";
+  });
+  document.getElementById("btn-clear-lefthand").addEventListener("click", () => {
+    clearAccessoryByCategory("lefthand");
+    const sel = document.getElementById("lefthand-select");
+    if (sel) sel.value = "";
+  });
   document.getElementById("btn-toggle-grid").addEventListener("click", () => {
     grid.visible = !grid.visible;
   });
 
-  // Face Sliders
-  document.getElementById("face-x").addEventListener("input", (e) => {
-    faceOffsetX = parseInt(e.target.value);
-    applyFaceTexture();
-  });
-  document.getElementById("face-y").addEventListener("input", (e) => {
-    faceOffsetY = parseInt(e.target.value);
-    applyFaceTexture();
-  });
-  document.getElementById("face-sx").addEventListener("input", (e) => {
-    faceScaleX = parseInt(e.target.value) / 100;
-    applyFaceTexture();
-  });
-  document.getElementById("face-sy").addEventListener("input", (e) => {
-    faceScaleY = parseInt(e.target.value) / 100;
-    applyFaceTexture();
-  });
+
+  // Accessory Sliders
+  const setupSliderSync = (rangeId, numId, callback) => {
+    const rangeEl = document.getElementById(rangeId);
+    const numEl = document.getElementById(numId);
+    if (!rangeEl || !numEl) return;
+    
+    rangeEl.addEventListener("input", (e) => {
+      numEl.value = e.target.value;
+      callback(parseFloat(e.target.value));
+    });
+    numEl.addEventListener("input", (e) => {
+      rangeEl.value = e.target.value;
+      callback(parseFloat(e.target.value));
+    });
+  };
+
+  setupSliderSync("acc-x", "acc-x-num", (val) => { accOffsetX = val; updateAccessoriesTransform(); logAccessoryCoords(); });
+  setupSliderSync("acc-y", "acc-y-num", (val) => { accOffsetY = val; updateAccessoriesTransform(); logAccessoryCoords(); });
+  setupSliderSync("acc-z", "acc-z-num", (val) => { accOffsetZ = val; updateAccessoriesTransform(); logAccessoryCoords(); });
+  setupSliderSync("acc-rx", "acc-rx-num", (val) => { accRotationX = val; updateAccessoriesTransform(); logAccessoryCoords(); });
+  setupSliderSync("acc-ry", "acc-ry-num", (val) => { accRotationY = val; updateAccessoriesTransform(); logAccessoryCoords(); });
+  setupSliderSync("acc-scale", "acc-scale-num", (val) => { accScale = val / 100; updateAccessoriesTransform(); logAccessoryCoords(); });
+}
+
+function updateAccessoriesTransform() {
+  // Chỉ apply cho phụ kiện thuộc category đang được chỉnh
+  const activeModel = activeCategoryModels[activeTuningCategory];
+  if (!activeModel) return;
+
+  activeModel.position.x = accOffsetX / 100;
+  activeModel.position.y = accOffsetY / 100;
+  activeModel.position.z = accOffsetZ / 100;
+  activeModel.rotation.x = accRotationX * (Math.PI / 180);
+  activeModel.rotation.y = accRotationY * (Math.PI / 180);
+  activeModel.rotation.z = accRotationZ * (Math.PI / 180);
+  activeModel.scale.setScalar(accScale);
+}
+
+function logAccessoryCoords() {
+  const name = activeAccessories[activeTuningCategory];
+  const model = activeCategoryModels[activeTuningCategory];
+
+  if (!model) {
+    console.log("%c[📍 Không có phụ kiện nào đang active cho category này]", "color:#888;font-size:12px;");
+    return;
+  }
+
+  const toDeg = (r) => Math.round(r * (180 / Math.PI));
+  console.log(
+    `%c[📍 Tọa Độ: ${name}]`,
+    "color:#E63946;font-weight:bold;font-size:13px;"
+  );
+  console.log(
+    `  x: ${Math.round(model.position.x * 100)}  |  y: ${Math.round(model.position.y * 100)}  |  z: ${Math.round(model.position.z * 100)}  |  rx: ${toDeg(model.rotation.x)}  |  ry: ${toDeg(model.rotation.y)}  |  scale: ${model.scale.x.toFixed(2)}`
+  );
+  console.log(JSON.stringify({
+    x: Math.round(model.position.x * 100),
+    y: Math.round(model.position.y * 100),
+    z: Math.round(model.position.z * 100),
+    rx: toDeg(model.rotation.x),
+    ry: toDeg(model.rotation.y),
+    scale: parseFloat(model.scale.x.toFixed(2))
+  }, null, 2));
 }
 
 function updateEnvironment(theme) {
@@ -967,28 +1541,163 @@ function updateEnvironment(theme) {
 // ── Accessory System ─────────────────────────────────────────────────────────
 function addAccessory(mesh, attachmentName = "Head") {
   if (!avatar) return;
-  const target = avatar.getObjectByName(attachmentName);
+
+  let target = null;
+  // Ưu tiên dùng headTargets nếu đang muốn gắn vào Head
+  if (attachmentName.toLowerCase().includes("head") && headTargets.length > 0) {
+    target = headTargets[0];
+  }
+
+  // Nếu không thấy trong headTargets, tìm thủ công
+  if (!target) {
+    const lowTargetName = attachmentName.toLowerCase();
+    avatar.traverse((child) => {
+      if (target) return;
+      const lowChildName = child.name.toLowerCase();
+      if (lowChildName === lowTargetName || (lowChildName.includes(lowTargetName) && !lowChildName.includes("attachment"))) {
+        target = child;
+      }
+    });
+  }
+
   if (target) {
-    target.add(mesh);
-    accessories.push(mesh);
+    const socket = target.getObjectByName(attachmentName + "Attachment") || target;
+    socket.add(mesh);
+    console.log(`Attached accessory to ${socket.name}`);
   } else {
-    // Fallback if Head not found (for some models)
     avatar.add(mesh);
-    accessories.push(mesh);
+  }
+  // Không gọi updateAccessoriesTransform() để không ghi đè tọa độ riêng của từng tóc
+}
+
+function loadAccessoryFromFile(url, category, attachmentName = "Head", configObj = null) {
+  if (!avatar) return;
+
+  const filename = url.split("/").pop();
+  let config = configObj;
+  // Fallback map cho config trong trường hợp reload loadAvatar mà không có sẵn
+  if (!config) {
+    if (category === "glasses") config = glassesConfigMap[filename];
+    else if (category === "wings") config = wingsConfigMap[filename];
+    else if (category === "neck") config = neckConfigMap[filename];
+    else if (category === "righthand") config = righthandConfigMap[filename];
+    else if (category === "lefthand") config = lefthandConfigMap[filename];
+    else if (category === "shoulder") config = shoulderConfigMap[filename];
+    else if (category === "hat") config = hatConfigMap[filename];
+    else if (category === "waist") config = waistConfigMap[filename];
+    else config = accessoryConfigMap[filename];
+  }
+
+  // Ưu tiên: tọa độ của nhân vật hiện tại → fallback "default" → fallback top-level
+  const charCoords = config
+    ? (config[currentCharId] || config["default"] || config)
+    : {};
+
+  const localX  = charCoords.x  !== undefined ? charCoords.x  : accOffsetX;
+  const localY  = charCoords.y  !== undefined ? charCoords.y  : accOffsetY;
+  const localZ  = charCoords.z  !== undefined ? charCoords.z  : accOffsetZ;
+  const localRx = charCoords.rx !== undefined ? charCoords.rx : accRotationX;
+  const localRy = charCoords.ry !== undefined ? charCoords.ry : accRotationY;
+  const localRz = charCoords.rz !== undefined ? charCoords.rz : accRotationZ;
+  const localScale = charCoords.scale !== undefined ? charCoords.scale : accScale;
+  if (config) attachmentName = config.attachment || attachmentName;
+
+  // Cập nhật lại state toàn cục để không bị reset khi kéo một slider khác
+  accOffsetX = localX;
+  accOffsetY = localY;
+  accOffsetZ = localZ;
+  accRotationX = localRx;
+  accRotationY = localRy;
+  accRotationZ = localRz;
+  accScale = localScale;
+
+  console.log(`[${category}] Dùng tọa độ nhân vật "${currentCharId}" → x:${localX} y:${localY} z:${localZ} rx:${localRx} ry:${localRy} scale:${localScale}`);
+
+  // Cập nhật thanh trượt UI theo kiểu tóc vừa chọn
+  const syncUiSlider = (baseId, val) => {
+    const el = document.getElementById(baseId);
+    if (el) el.value = val;
+    const numEl = document.getElementById(baseId + "-num");
+    if (numEl) numEl.value = val;
+  };
+  
+  syncUiSlider("acc-x", localX);
+  syncUiSlider("acc-y", localY);
+  syncUiSlider("acc-z", localZ);
+  syncUiSlider("acc-rx", localRx);
+  syncUiSlider("acc-ry", localRy);
+  syncUiSlider("acc-scale", localScale * 100);
+
+  setLoadingVisible(true);
+  const loader = new GLTFLoader();
+  loader.load(url, (gltf) => {
+    const model = gltf.scene;
+
+    // Căn giữa model về gốc (0,0,0)
+    const box = new THREE.Box3().setFromObject(model);
+    const center = new THREE.Vector3();
+    box.getCenter(center);
+    model.traverse((node) => {
+      if (node.isMesh) {
+        node.position.x -= center.x;
+        node.position.y -= center.y;
+        node.position.z -= center.z;
+        node.castShadow = true;
+        node.receiveShadow = true;
+      }
+    });
+
+    // Áp dụng tọa độ riêng của kiểu tóc này từ config
+    model.position.set(
+      localX / 100,
+      localY / 100,
+      localZ / 100
+    );
+    model.rotation.set(
+      localRx * (Math.PI / 180),
+      localRy * (Math.PI / 180),
+      localRz * (Math.PI / 180)
+    );
+    model.scale.setScalar(localScale);
+
+    // Lưu model pointer
+    activeCategoryModels[category] = model;
+
+    addAccessory(model, attachmentName);
+    setLoadingVisible(false);
+    console.log(`[Phụ kiện] Đã thêm: ${filename}`);
+  }, undefined, (err) => {
+    setLoadingVisible(false);
+    // Bỏ active nút nếu load thất bại
+    const failBtn = document.querySelector(`.hair-btn[data-filename="${filename}"]`);
+    if (failBtn) failBtn.classList.remove("active");
+    window.showError("Lỗi tải phụ kiện: " + err.message);
+  });
+}
+
+function clearAccessoryByCategory(category, clearState = true) {
+  const model = activeCategoryModels[category];
+  if (model) {
+    if (model.parent) model.parent.remove(model);
+    model.traverse((child) => {
+      if (child.geometry) child.geometry.dispose();
+      if (child.material) {
+        if (Array.isArray(child.material)) {
+          child.material.forEach((m) => m.dispose());
+        } else {
+          child.material.dispose();
+        }
+      }
+    });
+    activeCategoryModels[category] = null;
+  }
+  if (clearState) {
+    activeAccessories[category] = null;
   }
 }
 
-function clearAccessories() {
-  accessories.forEach(acc => {
-    if (acc.parent) acc.parent.remove(acc);
-    if (acc.geometry) acc.geometry.dispose();
-    if (acc.material) acc.material.dispose();
-  });
-  accessories.length = 0;
-}
-
 function addTestAccessory(type) {
-  clearAccessories();
+  clearAccessoryByCategory("hair");
   if (type === "Hat") {
     // Create a simple procedural hat (Box)
     const group = new THREE.Group();
@@ -1012,7 +1721,8 @@ function addTestAccessory(type) {
 
 function addSmartAccessory(type) {
   if (!avatar) return;
-  clearAccessories();
+  clearAccessoryByCategory("glasses"); // as a fallback
+
 
   const char = CHARACTERS.find(c => c.id === currentCharId);
   const sockets = char ? char.sockets : { eyesY: 0.5, noseY: 0.4, mouthY: 0.3, zOffset: 0.5 };

@@ -1,0 +1,290 @@
+{
+  "obsidian-dragon-wings-roblox-g43z50cp.glb": {
+    "label": "Cánh Obsidian Dragon",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 305,
+      "z": 99,
+      "rx": 0,
+      "ry": 58,
+      "scale": 8
+    },
+    "man": {
+      "x": -285,
+      "y": 774,
+      "z": -484,
+      "rx": 0,
+      "ry": 58,
+      "scale": 7
+    },
+    "woman": {
+      "x": 3,
+      "y": -5,
+      "z": 73,
+      "rx": 0,
+      "ry": 60,
+      "scale": 7
+    },
+    "rounded": {
+      "x": 3,
+      "y": -5,
+      "z": 97,
+      "rx": 0,
+      "ry": 58,
+      "scale": 7
+    }
+  },
+  "shadow-demon-guitar-roblox-o0gu6kx6.glb": {
+    "label": "Đàn shadow demon guitar",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 305,
+      "z": 99,
+      "rx": 0,
+      "ry": -125,
+      "scale": 5
+    },
+    "man": {
+      "x": -285,
+      "y": 774,
+      "z": -484,
+      "rx": 0,
+      "ry": -122,
+      "scale": 5
+    },
+    "woman": {
+      "x": 3,
+      "y": 17,
+      "z": 63,
+      "rx": 0,
+      "ry": -121,
+      "scale": 5
+    },
+    "rounded": {
+      "x": 3,
+      "y": 30,
+      "z": 97,
+      "rx": 0,
+      "ry": -126,
+      "scale": 5
+    }
+  },
+  "classic-modern-item-roblox-w8f9jhx7.glb": {
+    "label": "Cánh classic modern",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 229,
+      "z": 99,
+      "rx": 0,
+      "ry": 110,
+      "scale": 8
+    },
+    "man": {
+      "x": -288,
+      "y": 669,
+      "z": -484,
+      "rx": 0,
+      "ry": 108,
+      "scale": 7
+    },
+    "woman": {
+      "x": 3,
+      "y": -108,
+      "z": 73,
+      "rx": 0,
+      "ry": 115,
+      "scale": 7
+    },
+    "rounded": {
+      "x": 3,
+      "y": -45,
+      "z": 97,
+      "rx": 0,
+      "ry": 109,
+      "scale": 7
+    }
+  },
+  "crimson-shadow-katana-roblox-tdm9galp.glb": {
+    "label": "Kiếm crimson shadow katana",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 382,
+      "z": 73,
+      "rx": 0,
+      "ry": 131,
+      "scale": 3.74
+    },
+    "man": {
+      "x": -288,
+      "y": 777,
+      "z": -519,
+      "rx": 0,
+      "ry": 136,
+      "scale": 3.59
+    },
+    "woman": {
+      "x": 3,
+      "y": 8,
+      "z": 41,
+      "rx": 0,
+      "ry": 138,
+      "scale": 3.81
+    },
+    "rounded": {
+      "x": 3,
+      "y": 56,
+      "z": 54,
+      "rx": 0,
+      "ry": 133,
+      "scale": 3.8
+    }
+  },
+  "sleek-clean-cape-roblox-3edd198e.glb": {
+    "label": "kiếm sleek clean",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 285,
+      "z": 73,
+      "rx": 0,
+      "ry": 238,
+      "scale": 4.23
+    },
+    "man": {
+      "x": -288,
+      "y": 707,
+      "z": -519,
+      "rx": 0,
+      "ry": -118,
+      "scale": 4.33
+    },
+    "woman": {
+      "x": 3,
+      "y": -62,
+      "z": 60,
+      "rx": 0,
+      "ry": -118,
+      "scale": 3.81
+    },
+    "rounded": {
+      "x": 3,
+      "y": -14,
+      "z": 67,
+      "rx": 0,
+      "ry": 240,
+      "scale": 4.7
+    }
+  },
+  "mystic-knight-wings-roblox-4hukcmop.glb": {
+    "label": "Cánh mystic knight",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 285,
+      "z": 73,
+      "rx": 0,
+      "ry": 238,
+      "scale": 4.23
+    },
+    "man": {
+      "x": -288,
+      "y": 707,
+      "z": -519,
+      "rx": 0,
+      "ry": -118,
+      "scale": 4.33
+    },
+    "woman": {
+      "x": 3,
+      "y": -10,
+      "z": 60,
+      "rx": 0,
+      "ry": 209,
+      "scale": 3.81
+    },
+    "rounded": {
+      "x": 3,
+      "y": 11,
+      "z": 67,
+      "rx": 0,
+      "ry": 225,
+      "scale": 4.7
+    }
+  },
+  "cuddly-bear-backpack-roblox-2qv9ro7n.glb": {
+    "label": "Balo cuddly bear",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 325,
+      "z": 73,
+      "rx": 0,
+      "ry": 238,
+      "scale": 3
+    },
+    "man": {
+      "x": -288,
+      "y": 739,
+      "z": -497,
+      "rx": 0,
+      "ry": -126,
+      "scale": 2.8
+    },
+    "woman": {
+      "x": 3,
+      "y": -10,
+      "z": 60,
+      "rx": 0,
+      "ry": 234,
+      "scale": 1.73
+    },
+    "rounded": {
+      "x": 3,
+      "y": 11,
+      "z": 67,
+      "rx": 0,
+      "ry": 234,
+      "scale": 2.5
+    }
+  },
+  "floral-denim-backpack-roblox-p0gzmbh5.glb": {
+    "label": "Balo floral denim",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 325,
+      "z": 73,
+      "rx": 0,
+      "ry": 274,
+      "scale": 2.64
+    },
+    "man": {
+      "x": -288,
+      "y": 739,
+      "z": -497,
+      "rx": 0,
+      "ry": -90,
+      "scale": 2.36
+    },
+    "woman": {
+      "x": 3,
+      "y": -10,
+      "z": 60,
+      "rx": 0,
+      "ry": 273,
+      "scale": 1.73
+    },
+    "rounded": {
+      "x": 5,
+      "y": 11,
+      "z": 67,
+      "rx": 0,
+      "ry": 266,
+      "scale": 1.9
+    }
+  }
+}

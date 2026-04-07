@@ -1,0 +1,74 @@
+{
+  "frostbite-eclipse-scythe-roblox-06cntafq.glb": {
+    "label": "Lưỡi hái frostbite eclipse",
+    "attachment": "LeftGrip",
+    "default": {
+      "x": -133,
+      "y": 166,
+      "z": -105,
+      "rx": 5,
+      "ry": -5,
+      "scale": 5
+    },
+    "man": {
+      "x": -432,
+      "y": 618,
+      "z": -700,
+      "rx": 24,
+      "ry": -18,
+      "scale": 5
+    },
+    "woman": {
+      "x": -140,
+      "y": -120,
+      "z": -116,
+      "rx": 24,
+      "ry": -12,
+      "scale": 5
+    },
+    "rounded": {
+      "x": -148,
+      "y": -121,
+      "z": -103,
+      "rx": 1,
+      "ry": -2,
+      "scale": 5
+    }
+  },
+  "midnight-blue-katana-roblox-n2t3y292.glb": {
+    "label": "Kiếm midnight blue katana",
+    "attachment": "LeftGrip",
+    "default": {
+      "x": -141,
+      "y": 223,
+      "z": -133,
+      "rx": 48,
+      "ry": -200,
+      "scale": 2.85
+    },
+    "man": {
+      "x": -408,
+      "y": 690,
+      "z": -700,
+      "rx": 82,
+      "ry": -218,
+      "scale": 2.85
+    },
+    "woman": {
+      "x": -130,
+      "y": -72,
+      "z": -129,
+      "rx": 58,
+      "ry": -209,
+      "scale": 2.85
+    },
+    "rounded": {
+      "x": -110,
+      "y": -79,
+      "z": -103,
+      "rx": 47,
+      "ry": -218,
+      "scale": 2.85
+    }
+  }
+}
