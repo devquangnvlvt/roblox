@@ -17,3 +17,11 @@
 "attachment": "LeftShoulder" hoặc "RightShoulder" — Trái/Phải vai (Dành cho thú cưng vắt vai, cầu vai áo giáp).
 "attachment": "RightGrip" — Cầm ở tay phải (nằm trong lòng bàn tay phải).
 "attachment": "LeftGrip" — Cầm ở tay trái (nằm trong lòng bàn tay trái).
+
+# chia sẻ qua http-server
+
+http-server -a [IP_ADDRESS] -p 4953
+
+# npm install -g http-server
+
+# python python_server.py

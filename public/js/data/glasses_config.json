@@ -1,0 +1,435 @@
+{
+  "silver-gemstone-sunglasses-roblox-zqwosfxb.glb": {
+    "label": "silver-gemstone-sunglasses-roblox-zqwosfxb",
+    "attachment": "FaceCenter",
+    "default": {
+      "x": 0,
+      "y": 460,
+      "z": -12,
+      "rx": -4,
+      "ry": 117,
+      "rz": 0,
+      "scale": 1.16
+    },
+    "man": {
+      "x": -290,
+      "y": 874,
+      "z": -596,
+      "rx": 0,
+      "ry": 117,
+      "scale": 1.03
+    },
+    "woman": {
+      "x": 0,
+      "y": 123,
+      "z": -2,
+      "rx": -8,
+      "ry": 117,
+      "rz": 0,
+      "scale": 1.34
+    },
+    "rounded": {
+      "x": 2,
+      "y": 171,
+      "z": -9,
+      "rx": -6,
+      "ry": 119,
+      "scale": 1.12
+    }
+  },
+  "stellar-eclipse-sunglasses-roblox-ykatfxjf.glb": {
+    "label": "stellar-eclipse-sunglasses-roblox-ykatfxjf",
+    "attachment": "FaceCenter",
+    "default": {
+      "x": 2,
+      "y": 460,
+      "z": -12,
+      "rx": -6,
+      "ry": 143,
+      "rz": 0,
+      "scale": 1.19
+    },
+    "man": {
+      "x": -290,
+      "y": 873,
+      "z": -603,
+      "rx": 0,
+      "ry": 143,
+      "scale": 1.03
+    },
+    "woman": {
+      "x": 0,
+      "y": 118,
+      "z": -10,
+      "rx": -7,
+      "ry": 143,
+      "rz": 0,
+      "scale": 1.23
+    },
+    "rounded": {
+      "x": -1,
+      "y": 171,
+      "z": -14,
+      "rx": -6,
+      "ry": 140,
+      "scale": 1.12
+    }
+  },
+  "frostbite-skull-roblox-w5db1xj7.glb": {
+    "label": "frostbite-skull-roblox-w5db1xj7",
+    "attachment": "FaceCenter",
+    "default": {
+      "x": 2,
+      "y": 445,
+      "z": -52,
+      "rx": -2,
+      "ry": 107,
+      "scale": 1.57
+    },
+    "man": {
+      "x": -290,
+      "y": 858,
+      "z": -633,
+      "rx": 2,
+      "ry": 107,
+      "scale": 1.66
+    },
+    "woman": {
+      "x": 0,
+      "y": 125,
+      "z": -46,
+      "rx": 0,
+      "ry": 107,
+      "rz": 0,
+      "scale": 1.61
+    },
+    "rounded": {
+      "x": 0,
+      "y": 151,
+      "z": -46,
+      "rx": 3,
+      "ry": 110,
+      "scale": 1.74
+    }
+  },
+  "sinister-clown-mask-roblox-tb9y0vbh.glb": {
+    "label": "sinister-clown-mask-roblox-tb9y0vbh",
+    "attachment": "FaceCenter",
+    "default": {
+      "x": 2,
+      "y": 445,
+      "z": -52,
+      "rx": -2,
+      "ry": 60,
+      "rz": 0,
+      "scale": 1.96
+    },
+    "man": {
+      "x": -290,
+      "y": 858,
+      "z": -633,
+      "rx": 2,
+      "ry": 55,
+      "scale": 1.66
+    },
+    "woman": {
+      "x": 0,
+      "y": 118,
+      "z": -80,
+      "rx": -7,
+      "ry": 56,
+      "rz": 0,
+      "scale": 1.28
+    },
+    "rounded": {
+      "x": 0,
+      "y": 151,
+      "z": -46,
+      "rx": 3,
+      "ry": 55,
+      "scale": 1.74
+    }
+  },
+
+  "abstract-monet-sunglasses-roblox-i41hgpsw.glb": {
+    "label": "abstract-monet-sunglasses-roblox-i41hgpsw",
+    "attachment": "FaceCenter",
+    "default": {
+      "x": 0,
+      "y": 460,
+      "z": -12,
+      "rx": -4,
+      "ry": 122,
+      "rz": 0,
+      "scale": 1.18
+    },
+    "man": {
+      "x": -290,
+      "y": 874,
+      "z": -600,
+      "rx": 0,
+      "ry": 126,
+      "rz": 0,
+      "scale": 1.07
+    },
+    "woman": {
+      "x": 1,
+      "y": 119,
+      "z": -9,
+      "rx": 1,
+      "ry": 126,
+      "rz": -1,
+      "scale": 1.32
+    },
+    "rounded": {
+      "x": 0,
+      "y": 168,
+      "z": -9,
+      "rx": 0,
+      "ry": 124,
+      "rz": 0,
+      "scale": 1.34
+    }
+  },
+
+  "pink-sparkle-shutter-shades-roblox-6eja9dq0.glb": {
+    "label": "Pink Sparkle Shutter Shades Roblox 6Eja9Dq0",
+    "attachment": "FaceCenter",
+    "default": {
+      "x": 0,
+      "y": 453,
+      "z": -29,
+      "rx": -4,
+      "ry": 119,
+      "rz": 0,
+      "scale": 1.16
+    },
+    "man": {
+      "x": -290,
+      "y": 874,
+      "z": -616,
+      "rx": 0,
+      "ry": 117,
+      "rz": 0,
+      "scale": 1.03
+    },
+    "woman": {
+      "x": -1,
+      "y": 118,
+      "z": -15,
+      "rx": -7,
+      "ry": 117,
+      "rz": 0,
+      "scale": 1.22
+    },
+    "rounded": {
+      "x": -1,
+      "y": 171,
+      "z": -20,
+      "rx": -6,
+      "ry": 119,
+      "rz": 0,
+      "scale": 1.27
+    }
+  },
+  "pixelated-retro-glasses-roblox-q7srbs8u.glb": {
+    "label": "Pixelated Retro Glasses Roblox Q7Srbs8U",
+    "attachment": "FaceCenter",
+    "default": {
+      "x": 0,
+      "y": 460,
+      "z": -12,
+      "rx": -4,
+      "ry": 121,
+      "rz": 0,
+      "scale": 1.09
+    },
+    "man": {
+      "x": -290,
+      "y": 876,
+      "z": -599,
+      "rx": 0,
+      "ry": 122,
+      "rz": 0,
+      "scale": 1.03
+    },
+    "woman": {
+      "x": -1,
+      "y": 122,
+      "z": -11,
+      "rx": -7,
+      "ry": 121,
+      "rz": 0,
+      "scale": 1.23
+    },
+    "rounded": {
+      "x": 0,
+      "y": 169,
+      "z": -9,
+      "rx": 0,
+      "ry": 121,
+      "rz": 0,
+      "scale": 1.23
+    }
+  },
+  "pixel-blaze-shades-roblox-1js15ez1.glb": {
+    "label": "Pixel Blaze Shades Roblox 1Js15Ez1",
+    "attachment": "FaceCenter",
+    "default": {
+      "x": 0,
+      "y": 455,
+      "z": -19,
+      "rx": -4,
+      "ry": 121,
+      "rz": 0,
+      "scale": 1.1
+    },
+    "man": {
+      "x": -290,
+      "y": 874,
+      "z": -606,
+      "rx": 0,
+      "ry": 120,
+      "rz": 0,
+      "scale": 1.03
+    },
+    "woman": {
+      "x": 0,
+      "y": 122,
+      "z": -13,
+      "rx": -7,
+      "ry": 123,
+      "rz": 0,
+      "scale": 1.33
+    },
+    "rounded": {
+      "x": 0,
+      "y": 164,
+      "z": -20,
+      "rx": 0,
+      "ry": 122,
+      "rz": 0,
+      "scale": 1.26
+    }
+  },
+  "vivid-graffiti-shades-roblox-rgz68ot0.glb": {
+    "label": "Vivid Graffiti Shades Roblox Rgz68Ot0",
+    "attachment": "FaceCenter",
+    "default": {
+      "x": 0,
+      "y": 460,
+      "z": -22,
+      "rx": -4,
+      "ry": 91,
+      "rz": 0,
+      "scale": 1.16
+    },
+    "man": {
+      "x": -290,
+      "y": 874,
+      "z": -609,
+      "rx": 0,
+      "ry": 92,
+      "rz": 0,
+      "scale": 1.03
+    },
+    "woman": {
+      "x": -1,
+      "y": 122,
+      "z": -23,
+      "rx": -7,
+      "ry": 93,
+      "rz": 0,
+      "scale": 1.21
+    },
+    "rounded": {
+      "x": 0,
+      "y": 171,
+      "z": -24,
+      "rx": -6,
+      "ry": 93,
+      "rz": 0,
+      "scale": 1.25
+    }
+  },
+  "crimson-oni-mask-roblox-6jlasd07.glb": {
+    "label": "Crimson Oni Mask Roblox 6Jlasd07",
+    "attachment": "FaceCenter",
+    "default": {
+      "x": 0,
+      "y": 461,
+      "z": -62,
+      "rx": -4,
+      "ry": 116,
+      "rz": 0,
+      "scale": 2.0
+    },
+    "man": {
+      "x": -290,
+      "y": 883,
+      "z": -636,
+      "rx": 12,
+      "ry": 117,
+      "rz": 0,
+      "scale": 1.91
+    },
+    "woman": {
+      "x": 0,
+      "y": 129,
+      "z": -58,
+      "rx": -9,
+      "ry": 117,
+      "rz": 0,
+      "scale": 2.04
+    },
+    "rounded": {
+      "x": -1,
+      "y": 183,
+      "z": -62,
+      "rx": -6,
+      "ry": 117,
+      "rz": 0,
+      "scale": 2.29
+    }
+  },
+
+ 
+  "vibrant-joker-mask-roblox-v7vj90c9.glb": {
+    "label": "Vibrant Joker Mask Roblox V7Vj90C9",
+    "attachment": "FaceCenter",
+    "default": {
+      "x": 0,
+      "y": 460,
+      "z": -12,
+      "rx": -4,
+      "ry": 90,
+      "scale": 2.32
+    },
+    "man": {
+      "x": -290,
+      "y": 874,
+      "z": -596,
+      "rx": 0,
+      "ry": 90,
+      "scale": 1.98
+    },
+    "woman": {
+      "x": 0,
+      "y": 138,
+      "z": -2,
+      "rx": 0,
+      "ry": 88,
+      "rz": 0,
+      "scale": 2.13
+    },
+    "rounded": {
+      "x": 2,
+      "y": 182,
+      "z": -9,
+      "rx": 0,
+      "ry": 92,
+      "rz": 0,
+      "scale": 2.44
+    }
+  }
+}

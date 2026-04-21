@@ -1,0 +1,944 @@
+{
+  "obsidian-dragon-wings-roblox-g43z50cp.glb": {
+    "label": "obsidian-dragon-wings-roblox-g43z50cp",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 331,
+      "z": 21,
+      "rx": 0,
+      "ry": 242,
+      "rz": 0,
+      "scale": 10.0
+    },
+    "man": {
+      "x": -285,
+      "y": 774,
+      "z": -560,
+      "rx": 0,
+      "ry": 240,
+      "rz": 0,
+      "scale": 8.0
+    },
+    "woman": {
+      "x": 3,
+      "y": -5,
+      "z": 73,
+      "rx": 0,
+      "ry": 60,
+      "scale": 7
+    },
+    "rounded": {
+      "x": 3,
+      "y": -5,
+      "z": 98,
+      "rx": 0,
+      "ry": 58,
+      "rz": 0,
+      "scale": 7.0
+    }
+  },
+  "shadow-demon-guitar-roblox-o0gu6kx6.glb": {
+    "label": "shadow-demon-guitar-roblox-o0gu6kx6",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 305,
+      "z": 69,
+      "rx": -43,
+      "ry": -141,
+      "rz": -55,
+      "scale": 6.0
+    },
+    "man": {
+      "x": -285,
+      "y": 774,
+      "z": -521,
+      "rx": 128,
+      "ry": -31,
+      "rz": 114,
+      "scale": 5.0
+    },
+    "woman": {
+      "x": 3,
+      "y": 17,
+      "z": 63,
+      "rx": 0,
+      "ry": -121,
+      "scale": 5
+    },
+    "rounded": {
+      "x": -18,
+      "y": 38,
+      "z": 58,
+      "rx": -47,
+      "ry": -139,
+      "rz": -58,
+      "scale": 5.0
+    }
+  },
+  "classic-modern-item-roblox-w8f9jhx7.glb": {
+    "label": "classic-modern-item-roblox-w8f9jhx7",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 229,
+      "z": 99,
+      "rx": 0,
+      "ry": 110,
+      "rz": 0,
+      "scale": 11.0
+    },
+    "man": {
+      "x": -288,
+      "y": 669,
+      "z": -484,
+      "rx": 0,
+      "ry": 108,
+      "scale": 7
+    },
+    "woman": {
+      "x": 3,
+      "y": -108,
+      "z": 73,
+      "rx": 0,
+      "ry": 115,
+      "scale": 7
+    },
+    "rounded": {
+      "x": 3,
+      "y": -45,
+      "z": 97,
+      "rx": 0,
+      "ry": 109,
+      "rz": 0,
+      "scale": 8.0
+    }
+  },
+  "crimson-shadow-katana-roblox-tdm9galp.glb": {
+    "label": "crimson-shadow-katana-roblox-tdm9galp",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 365,
+      "z": 58,
+      "rx": -8,
+      "ry": -46,
+      "rz": 0,
+      "scale": 5.0
+    },
+    "man": {
+      "x": -288,
+      "y": 777,
+      "z": -519,
+      "rx": 0,
+      "ry": 136,
+      "rz": 0,
+      "scale": 3.98
+    },
+    "woman": {
+      "x": 3,
+      "y": 8,
+      "z": 41,
+      "rx": 0,
+      "ry": 138,
+      "scale": 3.81
+    },
+    "rounded": {
+      "x": 3,
+      "y": 56,
+      "z": 54,
+      "rx": 0,
+      "ry": 133,
+      "rz": 0,
+      "scale": 3.8
+    }
+  },
+  "sleek-clean-cape-roblox-3edd198e.glb": {
+    "label": "sleek-clean-cape-roblox-3edd198e",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 285,
+      "z": 73,
+      "rx": 0,
+      "ry": 238,
+      "scale": 4.23
+    },
+    "man": {
+      "x": -288,
+      "y": 707,
+      "z": -519,
+      "rx": -53,
+      "ry": -137,
+      "rz": -67,
+      "scale": 5.0
+    },
+    "woman": {
+      "x": 3,
+      "y": -62,
+      "z": 60,
+      "rx": 0,
+      "ry": -118,
+      "scale": 3.81
+    },
+    "rounded": {
+      "x": 3,
+      "y": -14,
+      "z": 67,
+      "rx": 0,
+      "ry": 240,
+      "scale": 4.7
+    }
+  },
+  "mystic-knight-wings-roblox-4hukcmop.glb": {
+    "label": "mystic-knight-wings-roblox-4hukcmop",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 285,
+      "z": 73,
+      "rx": 0,
+      "ry": 238,
+      "scale": 4.23
+    },
+    "man": {
+      "x": -288,
+      "y": 707,
+      "z": -519,
+      "rx": 0,
+      "ry": -118,
+      "scale": 4.33
+    },
+    "woman": {
+      "x": 3,
+      "y": -10,
+      "z": 60,
+      "rx": 0,
+      "ry": 209,
+      "scale": 3.81
+    },
+    "rounded": {
+      "x": 3,
+      "y": 11,
+      "z": 67,
+      "rx": 0,
+      "ry": 225,
+      "scale": 4.7
+    }
+  },
+  "cuddly-bear-backpack-roblox-2qv9ro7n.glb": {
+    "label": "cuddly-bear-backpack-roblox-2qv9ro7n",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 325,
+      "z": 73,
+      "rx": 0,
+      "ry": 238,
+      "scale": 3
+    },
+    "man": {
+      "x": -288,
+      "y": 739,
+      "z": -497,
+      "rx": 0,
+      "ry": -126,
+      "scale": 2.8
+    },
+    "woman": {
+      "x": 3,
+      "y": -10,
+      "z": 60,
+      "rx": 0,
+      "ry": 234,
+      "scale": 1.73
+    },
+    "rounded": {
+      "x": 3,
+      "y": 11,
+      "z": 67,
+      "rx": 0,
+      "ry": 234,
+      "scale": 2.5
+    }
+  },
+  "floral-denim-backpack-roblox-p0gzmbh5.glb": {
+    "label": "floral-denim-backpack-roblox-p0gzmbh5",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 311,
+      "z": 78,
+      "rx": 0,
+      "ry": 274,
+      "rz": 0,
+      "scale": 1.97
+    },
+    "man": {
+      "x": -288,
+      "y": 739,
+      "z": -497,
+      "rx": 0,
+      "ry": -90,
+      "scale": 2.36
+    },
+    "woman": {
+      "x": 3,
+      "y": -10,
+      "z": 50,
+      "rx": 0,
+      "ry": 273,
+      "rz": 0,
+      "scale": 1.73
+    },
+    "rounded": {
+      "x": 5,
+      "y": 11,
+      "z": 67,
+      "rx": 0,
+      "ry": 266,
+      "scale": 1.9
+    }
+  },
+  "ancient-red-backpack-roblox-t7jyi7md.glb": {
+    "label": "Ancient Red Backpack Roblox T7Jyi7Md",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 299,
+      "z": 82,
+      "rx": 0,
+      "ry": -240,
+      "rz": 0,
+      "scale": 5.0
+    },
+    "man": {
+      "x": -285,
+      "y": 690,
+      "z": -524,
+      "rx": 0,
+      "ry": -61,
+      "rz": 0,
+      "scale": 5.0
+    },
+    "woman": {
+      "x": 0,
+      "y": -28,
+      "z": 50,
+      "rx": 0,
+      "ry": -61,
+      "rz": -5,
+      "scale": 3.87
+    },
+    "rounded": {
+      "x": 0,
+      "y": -2,
+      "z": 77,
+      "rx": -3,
+      "ry": 125,
+      "rz": 5,
+      "scale": 4.52
+    }
+  },
+  "blazing-flame-axe-roblox-z7u0odgv.glb": {
+    "label": "Blazing Flame Axe Roblox Z7U0Odgv",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 305,
+      "z": 74,
+      "rx": 97,
+      "ry": 45,
+      "rz": -97,
+      "scale": 7.0
+    },
+    "man": {
+      "x": -285,
+      "y": 769,
+      "z": -514,
+      "rx": 96,
+      "ry": 132,
+      "rz": -94,
+      "scale": 6.0
+    },
+    "woman": {
+      "x": 0,
+      "y": -38,
+      "z": 65,
+      "rx": 97,
+      "ry": 45,
+      "rz": -97,
+      "scale": 4.21
+    },
+    "rounded": {
+      "x": 4,
+      "y": 55,
+      "z": 80,
+      "rx": 79,
+      "ry": 54,
+      "rz": -78,
+      "scale": 5.0
+    }
+  },
+  "bombos-arrow-roblox-v3o5n5i1.glb": {
+    "label": "Bombos Arrow Roblox V3O5N5I1",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 305,
+      "z": 74,
+      "rx": 97,
+      "ry": 45,
+      "rz": -97,
+      "scale": 6.0
+    },
+    "man": {
+      "x": -295,
+      "y": 751,
+      "z": -517,
+      "rx": 97,
+      "ry": 45,
+      "rz": -97,
+      "scale": 6.0
+    },
+    "woman": {
+      "x": 0,
+      "y": 11,
+      "z": 50,
+      "rx": 97,
+      "ry": 45,
+      "rz": -97,
+      "scale": 3.68
+    },
+    "rounded": {
+      "x": 0,
+      "y": 32,
+      "z": 82,
+      "rx": 97,
+      "ry": 45,
+      "rz": -96,
+      "scale": 6.0
+    }
+  },
+  "clean-modern-shield-roblox-1sahzgcu.glb": {
+    "label": "Clean Modern Shield Roblox 1Sahzgcu",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 305,
+      "z": 74,
+      "rx": 61,
+      "ry": 42,
+      "rz": -73,
+      "scale": 7.0
+    },
+    "man": {
+      "x": -285,
+      "y": 665,
+      "z": -522,
+      "rx": 61,
+      "ry": 42,
+      "rz": -73,
+      "scale": 7.0
+    },
+    "woman": {
+      "x": 55,
+      "y": -56,
+      "z": 74,
+      "rx": 61,
+      "ry": 42,
+      "rz": -73,
+      "scale": 5.0
+    },
+    "rounded": {
+      "x": 0,
+      "y": 7,
+      "z": 74,
+      "rx": 61,
+      "ry": 42,
+      "rz": -74,
+      "scale": 4.94
+    }
+  },
+  "cartoon-blast-rifle-roblox-4lb569l5.glb": {
+    "label": "Cartoon Blast Rifle Roblox 4Lb569L5",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 305,
+      "z": -85,
+      "rx": 133,
+      "ry": 54,
+      "rz": 231,
+      "scale": 3.67
+    },
+    "man": {
+      "x": -304,
+      "y": 726,
+      "z": -658,
+      "rx": 133,
+      "ry": 54,
+      "rz": 231,
+      "scale": 3.43
+    },
+    "woman": {
+      "x": 0,
+      "y": -38,
+      "z": 79,
+      "rx": -272,
+      "ry": -55,
+      "rz": 106,
+      "scale": 3.19
+    },
+    "rounded": {
+      "x": 7,
+      "y": -25,
+      "z": -79,
+      "rx": -32,
+      "ry": 116,
+      "rz": 41,
+      "scale": 4.09
+    }
+  },
+  "cuddly-teddy-backpack-roblox-immdqqgg.glb": {
+    "label": "Cuddly Teddy Backpack Roblox Immdqqgg",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 17,
+      "y": 339,
+      "z": 87,
+      "rx": 0,
+      "ry": -130,
+      "rz": 0,
+      "scale": 2.85
+    },
+    "man": {
+      "x": -285,
+      "y": 774,
+      "z": -512,
+      "rx": 0,
+      "ry": 233,
+      "rz": 0,
+      "scale": 2.5
+    },
+    "woman": {
+      "x": 3,
+      "y": 50,
+      "z": 123,
+      "rx": -14,
+      "ry": -129,
+      "rz": 0,
+      "scale": 2.7
+    },
+    "rounded": {
+      "x": -2,
+      "y": 51,
+      "z": 97,
+      "rx": 0,
+      "ry": 230,
+      "rz": 0,
+      "scale": 2.5
+    }
+  },
+  "dark-dark-bat-roblox-uk4rnrsw.glb": {
+    "label": "Dark Dark Bat Roblox Uk4Rnrsw",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 305,
+      "z": 88,
+      "rx": 0,
+      "ry": 58,
+      "rz": 0,
+      "scale": 3.81
+    },
+    "man": {
+      "x": -285,
+      "y": 752,
+      "z": -512,
+      "rx": 0,
+      "ry": 58,
+      "rz": 0,
+      "scale": 3.55
+    },
+    "woman": {
+      "x": 3,
+      "y": -5,
+      "z": 65,
+      "rx": 0,
+      "ry": 60,
+      "rz": 0,
+      "scale": 2.89
+    },
+    "rounded": {
+      "x": 3,
+      "y": -5,
+      "z": 97,
+      "rx": 0,
+      "ry": 58,
+      "rz": 0,
+      "scale": 4.0
+    }
+  },
+  "frosted-winter-scythe-roblox-zgbus9vh.glb": {
+    "label": "Frosted Winter Scythe Roblox Zgbus9Vh",
+    "attachment": "BodyBack",
+    "default": {
+      "x": -59,
+      "y": 338,
+      "z": 47,
+      "rx": 83,
+      "ry": -55,
+      "rz": 86,
+      "scale": 7.0
+    },
+    "man": {
+      "x": -336,
+      "y": 747,
+      "z": -548,
+      "rx": 83,
+      "ry": -55,
+      "rz": 86,
+      "scale": 7.0
+    },
+    "woman": {
+      "x": 13,
+      "y": -24,
+      "z": 94,
+      "rx": -300,
+      "ry": -249,
+      "rz": 300,
+      "scale": 4.36
+    },
+    "rounded": {
+      "x": 13,
+      "y": -24,
+      "z": 94,
+      "rx": -300,
+      "ry": -249,
+      "rz": 300,
+      "scale": 6.0
+    }
+  },
+  "infernal-feather-scythe-roblox-jnwzhkq9.glb": {
+    "label": "Infernal Feather Scythe Roblox Jnwzhkq9",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 305,
+      "z": 74,
+      "rx": 61,
+      "ry": 42,
+      "rz": -74,
+      "scale": 8.0
+    },
+    "man": {
+      "x": -257,
+      "y": 690,
+      "z": -522,
+      "rx": 61,
+      "ry": 40,
+      "rz": -74,
+      "scale": 7.0
+    },
+    "woman": {
+      "x": 0,
+      "y": -82,
+      "z": 74,
+      "rx": 61,
+      "ry": 42,
+      "rz": -74,
+      "scale": 4.55
+    },
+    "rounded": {
+      "x": 28,
+      "y": -15,
+      "z": 74,
+      "rx": 61,
+      "ry": 42,
+      "rz": -74,
+      "scale": 6.5
+    }
+  },
+  "midnight-blue-katana-roblox-n2t3y292.glb": {
+    "label": "Midnight Blue Katana Roblox N2T3Y292",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 305,
+      "z": 89,
+      "rx": -12,
+      "ry": 70,
+      "rz": 9,
+      "scale": 4.25
+    },
+    "man": {
+      "x": -285,
+      "y": 788,
+      "z": -511,
+      "rx": -17,
+      "ry": 67,
+      "rz": 12,
+      "scale": 4.0
+    },
+    "woman": {
+      "x": -11,
+      "y": 6,
+      "z": 86,
+      "rx": 0,
+      "ry": 60,
+      "rz": 0,
+      "scale": 3.64
+    },
+    "rounded": {
+      "x": 3,
+      "y": -5,
+      "z": 101,
+      "rx": 0,
+      "ry": 66,
+      "rz": 0,
+      "scale": 4.0
+    }
+  },
+  "modern-sleek-blade-roblox-rxyuhswx.glb": {
+    "label": "Modern Sleek Blade Roblox Rxyuhswx",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 305,
+      "z": 76,
+      "rx": 100,
+      "ry": 57,
+      "rz": -97,
+      "scale": 8.0
+    },
+    "man": {
+      "x": -285,
+      "y": 709,
+      "z": -515,
+      "rx": 101,
+      "ry": 52,
+      "rz": -98,
+      "scale": 7.0
+    },
+    "woman": {
+      "x": 32,
+      "y": -63,
+      "z": 79,
+      "rx": 83,
+      "ry": 50,
+      "rz": -84,
+      "scale": 4.66
+    },
+    "rounded": {
+      "x": 32,
+      "y": -40,
+      "z": 86,
+      "rx": 83,
+      "ry": 53,
+      "rz": -85,
+      "scale": 6.0
+    }
+  },
+  "molten-lava-hammer-roblox-hmgx9brg.glb": {
+    "label": "Molten Lava Hammer Roblox Hmgx9Brg",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 98,
+      "y": 351,
+      "z": 69,
+      "rx": 43,
+      "ry": 31,
+      "rz": -64,
+      "scale": 7.0
+    },
+    "man": {
+      "x": -229,
+      "y": 787,
+      "z": -509,
+      "rx": 43,
+      "ry": 31,
+      "rz": -64,
+      "scale": 5.0
+    },
+    "woman": {
+      "x": 32,
+      "y": -23,
+      "z": 108,
+      "rx": 43,
+      "ry": 31,
+      "rz": -64,
+      "scale": 4.28
+    },
+    "rounded": {
+      "x": 32,
+      "y": -23,
+      "z": 108,
+      "rx": 43,
+      "ry": 31,
+      "rz": -64,
+      "scale": 5.0
+    }
+  },
+  "mystic-purple-wings-roblox-wc390kc5.glb": {
+    "label": "Mystic Purple Wings Roblox Wc390Kc5",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 408,
+      "z": 69,
+      "rx": 0,
+      "ry": 86,
+      "rz": 0,
+      "scale": 9.0
+    },
+    "man": {
+      "x": -285,
+      "y": 845,
+      "z": -532,
+      "rx": 0,
+      "ry": 86,
+      "rz": 0,
+      "scale": 9.0
+    },
+    "woman": {
+      "x": 0,
+      "y": 65,
+      "z": 69,
+      "rx": 0,
+      "ry": 86,
+      "rz": 0,
+      "scale": 7.0
+    },
+    "rounded": {
+      "x": 6,
+      "y": 91,
+      "z": 76,
+      "rx": 0,
+      "ry": 85,
+      "rz": 0,
+      "scale": 7.0
+    }
+  },
+  "sunny-minion-backpack-roblox-gn51zez3.glb": {
+    "label": "Sunny Minion Backpack Roblox Gn51Zez3",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 305,
+      "z": 99,
+      "rx": 0,
+      "ry": 58,
+      "scale": 8,
+      "rz": 0
+    },
+    "man": {
+      "x": -285,
+      "y": 774,
+      "z": -484,
+      "rx": 0,
+      "ry": 58,
+      "scale": 7,
+      "rz": 0
+    },
+    "woman": {
+      "x": 3,
+      "y": -5,
+      "z": 73,
+      "rx": 0,
+      "ry": 60,
+      "scale": 7,
+      "rz": 0
+    },
+    "rounded": {
+      "x": 0,
+      "y": 14,
+      "z": 126,
+      "rx": -4,
+      "ry": 222,
+      "rz": 2,
+      "scale": 3.0
+    }
+  },
+  "volcanic-fury-sword-roblox-wdzrrdi5.glb": {
+    "label": "Volcanic Fury Sword Roblox Wdzrrdi5",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 305,
+      "z": 80,
+      "rx": -11,
+      "ry": 70,
+      "rz": 12,
+      "scale": 5.0
+    },
+    "man": {
+      "x": -285,
+      "y": 774,
+      "z": -504,
+      "rx": -18,
+      "ry": 71,
+      "rz": 18,
+      "scale": 5.0
+    },
+    "woman": {
+      "x": 3,
+      "y": -5,
+      "z": 73,
+      "rx": 0,
+      "ry": 60,
+      "rz": 0,
+      "scale": 4.06
+    },
+    "rounded": {
+      "x": 3,
+      "y": -5,
+      "z": 97,
+      "rx": 0,
+      "ry": 58,
+      "rz": 0,
+      "scale": 4.0
+    }
+  },
+  "sleek-modern-cape-roblox-culxw5vf.glb": {
+    "label": "Sleek Modern Cape Roblox Culxw5Vf",
+    "attachment": "BodyBack",
+    "default": {
+      "x": 0,
+      "y": 305,
+      "z": 99,
+      "rx": 0,
+      "ry": 58,
+      "scale": 8,
+      "rz": 0
+    },
+    "man": {
+      "x": -285,
+      "y": 762,
+      "z": -523,
+      "rx": 132,
+      "ry": 126,
+      "rz": 230,
+      "scale": 7.0
+    },
+    "woman": {
+      "x": 11,
+      "y": -18,
+      "z": 69,
+      "rx": 43,
+      "ry": 31,
+      "rz": -64,
+      "scale": 5.0
+    },
+    "rounded": {
+      "x": 11,
+      "y": -16,
+      "z": 71,
+      "rx": 46,
+      "ry": 31,
+      "rz": -62,
+      "scale": 6.0
+    }
+  }
+}

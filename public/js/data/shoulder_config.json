@@ -1,0 +1,194 @@
+{
+  "golden-ram-shoulder-roblox-885qbjsm.glb": {
+    "label": "golden-ram-shoulder-roblox-885qbjsm",
+    "attachment": "LeftShoulder",
+    "default": {
+      "x": 115,
+      "y": 435,
+      "z": 23,
+      "rx": 21,
+      "ry": 104,
+      "scale": 0.97
+    },
+    "man": {
+      "x": -203,
+      "y": 846,
+      "z": -571,
+      "rx": 20,
+      "ry": 103,
+      "scale": 0.84
+    },
+    "woman": {
+      "x": 75,
+      "y": 75,
+      "z": 2,
+      "rx": 4,
+      "ry": 122,
+      "scale": 0.7
+    },
+    "rounded": {
+      "x": 102,
+      "y": 130,
+      "z": 4,
+      "rx": 6,
+      "ry": 124,
+      "scale": 0.97
+    }
+  },
+  "pixel-cowboy-dragon-roblox-vu243eeq.glb": {
+    "label": "pixel-cowboy-dragon-roblox-vu243eeq",
+    "attachment": "LeftShoulder",
+    "default": {
+      "x": 109,
+      "y": 436,
+      "z": -11,
+      "rx": 2,
+      "ry": 91,
+      "scale": 0.75
+    },
+    "man": {
+      "x": -203,
+      "y": 844,
+      "z": -587,
+      "rx": 2,
+      "ry": 103,
+      "scale": 0.75
+    },
+    "woman": {
+      "x": 75,
+      "y": 75,
+      "z": 2,
+      "rx": 4,
+      "ry": 122,
+      "scale": 0.75
+    },
+    "rounded": {
+      "x": 102,
+      "y": 130,
+      "z": 4,
+      "rx": 5,
+      "ry": 93,
+      "scale": 0.75
+    }
+  },
+  "clean-modern-charm-roblox-harh7nkr.glb": {
+    "label": "Clean Modern Charm Roblox Harh7Nkr",
+    "attachment": "LeftShoulder",
+    "default": {
+      "x": 115,
+      "y": 435,
+      "z": 23,
+      "rx": 21,
+      "ry": 104,
+      "scale": 0.97,
+      "rz": 0
+    },
+    "man": {
+      "x": -203,
+      "y": 846,
+      "z": -571,
+      "rx": 20,
+      "ry": 103,
+      "scale": 0.84,
+      "rz": 0
+    },
+    "woman": {
+      "x": 163,
+      "y": -169,
+      "z": -198,
+      "rx": 4,
+      "ry": 122,
+      "rz": 0,
+      "scale": 1.76
+    },
+    "rounded": {
+      "x": 163,
+      "y": -169,
+      "z": -198,
+      "rx": 4,
+      "ry": 122,
+      "rz": 0,
+      "scale": 1.76
+    }
+  },
+  "cherry-blossom-companion-roblox-y09d093k.glb": {
+    "label": "Cherry Blossom Companion Roblox Y09D093K",
+    "attachment": "LeftShoulder",
+    "default": {
+      "x": 141,
+      "y": 435,
+      "z": 23,
+      "rx": 21,
+      "ry": 104,
+      "rz": 0,
+      "scale": 1.04
+    },
+    "man": {
+      "x": -203,
+      "y": 846,
+      "z": -571,
+      "rx": 20,
+      "ry": 103,
+      "scale": 0.84,
+      "rz": 0
+    },
+    "woman": {
+      "x": 75,
+      "y": 75,
+      "z": 2,
+      "rx": 4,
+      "ry": 122,
+      "scale": 0.7,
+      "rz": 0
+    },
+    "rounded": {
+      "x": 102,
+      "y": 142,
+      "z": 4,
+      "rx": 6,
+      "ry": 117,
+      "rz": 0,
+      "scale": 0.97
+    }
+  },
+  "enchanted-frog-backpack-roblox-4hbgw8m7.glb": {
+    "label": "Enchanted Frog Backpack Roblox 4Hbgw8M7",
+    "attachment": "LeftShoulder",
+    "default": {
+      "x": 124,
+      "y": 433,
+      "z": 3,
+      "rx": 3,
+      "ry": 70,
+      "rz": 0,
+      "scale": 1.23
+    },
+    "man": {
+      "x": -203,
+      "y": 846,
+      "z": -571,
+      "rx": 20,
+      "ry": 103,
+      "scale": 0.84,
+      "rz": 0
+    },
+    "woman": {
+      "x": 84,
+      "y": 63,
+      "z": 2,
+      "rx": 4,
+      "ry": 99,
+      "rz": 0,
+      "scale": 0.7
+    },
+    "rounded": {
+      "x": 107,
+      "y": 123,
+      "z": 4,
+      "rx": 0,
+      "ry": 94,
+      "rz": 0,
+      "scale": 0.97
+    }
+  }
+}

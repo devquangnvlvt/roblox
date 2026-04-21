@@ -1,0 +1,275 @@
+{
+  "frostbite-eclipse-scythe-roblox-06cntafq.glb": {
+    "label": "frostbite-eclipse-scythe-roblox-06cntafq",
+    "attachment": "LeftGrip",
+    "default": {
+      "x": -133,
+      "y": 166,
+      "z": -105,
+      "rx": 5,
+      "ry": -5,
+      "scale": 5
+    },
+    "man": {
+      "x": -405,
+      "y": 654,
+      "z": -752,
+      "rx": 33,
+      "ry": -15,
+      "rz": 9,
+      "scale": 5.0
+    },
+    "woman": {
+      "x": -140,
+      "y": -120,
+      "z": -116,
+      "rx": 24,
+      "ry": -12,
+      "scale": 5
+    },
+    "rounded": {
+      "x": -148,
+      "y": -121,
+      "z": -103,
+      "rx": 1,
+      "ry": -2,
+      "scale": 5
+    }
+  },
+  "midnight-blue-katana-roblox-n2t3y292.glb": {
+    "label": "midnight-blue-katana-roblox-n2t3y292",
+    "attachment": "LeftGrip",
+    "default": {
+      "x": -141,
+      "y": 223,
+      "z": -133,
+      "rx": 48,
+      "ry": -200,
+      "scale": 2.85
+    },
+    "man": {
+      "x": -408,
+      "y": 690,
+      "z": -700,
+      "rx": 82,
+      "ry": -218,
+      "scale": 2.85
+    },
+    "woman": {
+      "x": -130,
+      "y": -72,
+      "z": -129,
+      "rx": 58,
+      "ry": -209,
+      "scale": 2.85
+    },
+    "rounded": {
+      "x": -110,
+      "y": -79,
+      "z": -103,
+      "rx": 47,
+      "ry": -218,
+      "scale": 2.85
+    }
+  },
+  "lava-dragon-scythe-roblox-0p3q45ig.glb": {
+    "label": "Lava Dragon Scythe Roblox 0P3Q45Ig",
+    "attachment": "LeftGrip",
+    "default": {
+      "x": -144,
+      "y": 161,
+      "z": -76,
+      "rx": 80,
+      "ry": 0,
+      "rz": -178,
+      "scale": 3.48
+    },
+    "man": {
+      "x": -432,
+      "y": 606,
+      "z": -755,
+      "rx": -83,
+      "ry": 171,
+      "rz": 0,
+      "scale": 5.0
+    },
+    "woman": {
+      "x": -140,
+      "y": -70,
+      "z": -161,
+      "rx": 300,
+      "ry": -191,
+      "rz": 0,
+      "scale": 4.34
+    },
+    "rounded": {
+      "x": -148,
+      "y": -67,
+      "z": -144,
+      "rx": 293,
+      "ry": 191,
+      "rz": 0,
+      "scale": 4.34
+    }
+  },
+  "monochrome-dragon-sword-roblox-c21cpyss.glb": {
+    "label": "Monochrome Dragon Sword Roblox C21Cpyss",
+    "attachment": "LeftGrip",
+    "default": {
+      "x": -171,
+      "y": 186,
+      "z": -154,
+      "rx": 61,
+      "ry": -147,
+      "rz": -37,
+      "scale": 2.98
+    },
+    "man": {
+      "x": -432,
+      "y": 651,
+      "z": -744,
+      "rx": 70,
+      "ry": -135,
+      "rz": -61,
+      "scale": 3.0
+    },
+    "woman": {
+      "x": -150,
+      "y": -57,
+      "z": -141,
+      "rx": 84,
+      "ry": 129,
+      "rz": 1,
+      "scale": 2.85
+    },
+    "rounded": {
+      "x": -146,
+      "y": -31,
+      "z": -133,
+      "rx": 79,
+      "ry": 129,
+      "rz": -2,
+      "scale": 3.53
+    }
+  },
+  "mystic-gold-hammer-roblox-iygnfr2k.glb": {
+    "label": "Mystic Gold Hammer Roblox Iygnfr2K",
+    "attachment": "LeftGrip",
+    "default": {
+      "x": -154,
+      "y": 166,
+      "z": -105,
+      "rx": -100,
+      "ry": 130,
+      "rz": 0,
+      "scale": 4.48
+    },
+    "man": {
+      "x": -432,
+      "y": 672,
+      "z": -715,
+      "rx": -62,
+      "ry": 130,
+      "rz": 6,
+      "scale": 5.0
+    },
+    "woman": {
+      "x": -138,
+      "y": -75,
+      "z": -127,
+      "rx": -68,
+      "ry": 130,
+      "rz": 8,
+      "scale": 2.89
+    },
+    "rounded": {
+      "x": -131,
+      "y": -65,
+      "z": -96,
+      "rx": -69,
+      "ry": 143,
+      "rz": 6,
+      "scale": 3.5
+    }
+  },
+  "violet-eclipse-scythe-roblox-9p0e6hwl.glb": {
+    "label": "Violet Eclipse Scythe Roblox 9P0E6Hwl",
+    "attachment": "LeftGrip",
+    "default": {
+      "x": -133,
+      "y": 242,
+      "z": -239,
+      "rx": -129,
+      "ry": 9,
+      "rz": 0,
+      "scale": 4.0
+    },
+    "man": {
+      "x": -441,
+      "y": 682,
+      "z": -770,
+      "rx": -121,
+      "ry": -19,
+      "rz": -34,
+      "scale": 4.0
+    },
+    "woman": {
+      "x": -116,
+      "y": -41,
+      "z": -198,
+      "rx": -15,
+      "ry": -201,
+      "rz": -17,
+      "scale": 3.99
+    },
+    "rounded": {
+      "x": -142,
+      "y": -74,
+      "z": -174,
+      "rx": -30,
+      "ry": -180,
+      "rz": -5,
+      "scale": 4.0
+    }
+  },
+  "iridescent-blade-karambit-roblox-h38wfwry.glb": {
+    "label": "Iridescent Blade Karambit Roblox H38Wfwry",
+    "attachment": "LeftGrip",
+    "default": {
+      "x": -133,
+      "y": 166,
+      "z": -105,
+      "rx": 5,
+      "ry": -5,
+      "scale": 5,
+      "rz": 0
+    },
+    "man": {
+      "x": -432,
+      "y": 618,
+      "z": -700,
+      "rx": 24,
+      "ry": -18,
+      "scale": 5,
+      "rz": 0
+    },
+    "woman": {
+      "x": -140,
+      "y": -93,
+      "z": -51,
+      "rx": 31,
+      "ry": -26,
+      "rz": 187,
+      "scale": 1.65
+    },
+    "rounded": {
+      "x": -138,
+      "y": -80,
+      "z": -38,
+      "rx": 12,
+      "ry": -10,
+      "rz": 167,
+      "scale": 2.5
+    }
+  }
+}

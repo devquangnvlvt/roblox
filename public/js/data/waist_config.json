@@ -1,0 +1,38 @@
+{
+  "midnight-gothic-collar-roblox-ld3slk7l.glb": {
+    "label": "midnight-gothic-collar-roblox-ld3slk7l",
+    "attachment": "WaistCenter",
+    "default": {
+      "x": -2,
+      "y": 223,
+      "z": -38,
+      "rx": -6,
+      "ry": 114,
+      "scale": 0.7
+    },
+    "man": {
+      "x": -291,
+      "y": 627,
+      "z": -625,
+      "rx": -6,
+      "ry": 113,
+      "scale": 0.7
+    },
+    "woman": {
+      "x": 0,
+      "y": -98,
+      "z": -25,
+      "rx": -6,
+      "ry": 120,
+      "scale": 0.7
+    },
+    "rounded": {
+      "x": 0,
+      "y": -82,
+      "z": -49,
+      "rx": -6,
+      "ry": 112,
+      "scale": 0.7
+    }
+  }
+}
