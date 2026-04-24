@@ -257,8 +257,8 @@ window.setDarkMode = function (data) {
 function init() {
   window.THREE = THREE;
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0b0e11); // nền bg 3d // 0xffffff nền trắng, Xanh dương tối	0x1a1f2e
-
+  // scene.background = new THREE.Color(0xffffff); // nền bg 3d // 0xffffff nền trắng, Xanh dương tối	0x1a1f2e
+  scene.background = null;
   // Thiết lập Camera (Máy ảnh)
   const w = canvasMount.clientWidth || window.innerWidth;
   const h = canvasMount.clientHeight || window.innerHeight;
@@ -268,8 +268,10 @@ function init() {
 
   renderer = new THREE.WebGLRenderer({
     antialias: true,
+    alpha: true,
     preserveDrawingBuffer: true,
   });
+  renderer.setClearColor(0xffffff, 0.1);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(w, h);
   canvasMount.appendChild(renderer.domElement);
