@@ -149,6 +149,7 @@ let accRotationX = 0;
 let accRotationY = 0;
 let accRotationZ = 0;
 let accScale = 1.0;
+let isZoomLocked = false; // zoom
 
 // Accessory Map for dynamic loading
 let accessoryConfigMap = {};
@@ -298,6 +299,7 @@ function init() {
 
   injectCharacterSwitcher();
   injectControlPanel();
+  injectZoomControls();
   loadAvatar(currentCharId);
   bindUiEvents();
   loadAccessoryConfigs(); // Load JSON config at start
@@ -1557,7 +1559,94 @@ function animate() {
   renderer.render(scene, camera);
 }
 
-// ── Control Panel UI ─────────────────────────────────────────────────────────
+// khóa zoom
+function injectZoomControls() {
+  const style = document.createElement("style");
+  style.textContent = `
+    #zoom-controls {
+      position: fixed;
+      right: 20px;
+      bottom: 120px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 400;
+    }
+    .zoom-btn {
+      width: 48px;
+      height: 48px;
+      background: rgba(11, 14, 17, 0.75);
+      backdrop-filter: blur(18px) saturate(130%);
+      -webkit-backdrop-filter: blur(18px) saturate(130%);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 14px;
+      color: white;
+      font-size: 22px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      user-select: none;
+    }
+    .zoom-btn:hover {
+      background: rgba(255, 255, 255, 0.12);
+      transform: translateY(-2px);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+    .zoom-btn:active {
+      transform: translateY(0) scale(0.95);
+    }
+    .zoom-btn.locked {
+      background: rgba(230, 57, 70, 0.25);
+      border-color: #E63946;
+      color: #E63946;
+    }
+    .zoom-btn svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+  `;
+  document.head.appendChild(style);
+
+  const container = document.createElement("div");
+  container.id = "zoom-controls";
+  container.innerHTML = `
+    <button id="btn-lock-zoom" class="zoom-btn" title="Khóa/Mở khóa Zoom">
+      <svg id="icon-zoom-lock" viewBox="0 0 24 24"><path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM8.9 6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2H8.9V6z"/></svg>
+    </button>
+  `;
+  document.body.appendChild(container);
+
+  const btnLock = document.getElementById("btn-lock-zoom");
+  const iconLock = document.getElementById("icon-zoom-lock");
+
+  window.setZoomLocked = (locked) => {
+    isZoomLocked = !!locked;
+    if (controls) controls.enableZoom = !isZoomLocked;
+
+    if (btnLock) btnLock.classList.toggle("locked", isZoomLocked);
+    if (iconLock) {
+      if (isZoomLocked) {
+        iconLock.innerHTML =
+          '<path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>';
+      } else {
+        iconLock.innerHTML =
+          '<path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM8.9 6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2H8.9V6z"/>';
+      }
+    }
+  };
+
+  if (btnLock) {
+    btnLock.addEventListener("click", () => {
+      window.setZoomLocked(!isZoomLocked);
+    });
+  }
+}
+
 function injectControlPanel() {
   const panel = document.createElement("div");
   panel.id = "control-panel";
@@ -2565,7 +2654,6 @@ window.updateTheme = function (mode) {
   if (dirLight) dirLight.intensity = theme.lightIntensity;
 };
 
-
 /**
  * Hàm nhận mảng phụ kiện từ Kotlin
  * @param {Array|String} data - Danh sách phụ kiện JSON
@@ -2628,3 +2716,16 @@ window.setItems = function (dataList, charId = null) {
     window.setAccessories(accessoryTasks, charId);
   }
 };
+// // Khai báo biến trạng thái bên phía Kotlin
+// var isZoomLocked = false
+// // Khi người dùng nhấn nút trên giao diện Android (Kotlin)
+// fun toggleZoom() {
+//     isZoomLocked = !isZoomLocked
+
+//     // Truyền trạng thái sang JavaScript
+//     val script = "window.setZoomLocked($isZoomLocked)"
+//     webView.evaluateJavascript(script, null)
+
+//     // Log để kiểm tra
+//     println("Trạng thái khóa Zoom hiện tại: $isZoomLocked")
+// }

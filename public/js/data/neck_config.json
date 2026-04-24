@@ -116,47 +116,6 @@
       "scale": 1.16
     }
   },
-  "crimson-domino-crown-roblox-azqd47lc.glb": {
-    "label": "Crimson Domino Crown Roblox Azqd47Lc",
-    "attachment": "Neck",
-    "default": {
-      "x": 0,
-      "y": 336,
-      "z": -27,
-      "rx": 0,
-      "ry": 82,
-      "scale": 1.57,
-      "rz": 0
-    },
-    "man": {
-      "x": -288,
-      "y": 755,
-      "z": -613,
-      "rx": 0,
-      "ry": 86,
-      "scale": 1.57,
-      "rz": 0
-    },
-    "woman": {
-      "x": 0,
-      "y": -2,
-      "z": -16,
-      "rx": 7,
-      "ry": 82,
-      "scale": 1.57,
-      "rz": 0
-    },
-    "rounded": {
-      "x": 0,
-      "y": 50,
-      "z": -37,
-      "rx": 17,
-      "ry": 82,
-      "scale": 1.57,
-      "rz": 0
-    }
-  },
- 
   "midnight-gothic-collar-roblox-ld3slk7l.glb": {
     "label": "Midnight Gothic Collar Roblox Ld3Slk7L",
     "attachment": "Neck",
@@ -172,10 +131,10 @@
     "man": {
       "x": -288,
       "y": 755,
-      "z": -613,
+      "z": -584,
       "rx": 0,
-      "ry": 118,
-      "scale": 1.57
+      "ry": 125,
+      "scale": 2.64
     },
     "woman": {
       "x": 0,

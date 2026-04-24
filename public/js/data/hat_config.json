@@ -257,5 +257,84 @@
       "ry": 60,
       "scale": 1.65
     }
+  },
+  "whimsical-cat-ears-hat-roblox-a36dp3ey.glb": {
+    "label": "Whimsical Cat Ears Hat Roblox A36Dp3Ey",
+    "attachment": "Head",
+    "default": {
+      "x": 0,
+      "y": -7,
+      "z": -497,
+      "rx": -90,
+      "ry": 115,
+      "rz": 0,
+      "scale": 2.17
+    },
+    "man": {
+      "x": -290,
+      "y": 912,
+      "z": -603,
+      "rx": 0,
+      "ry": 115,
+      "rz": 0,
+      "scale": 1.85
+    },
+    "woman": {
+      "x": 2,
+      "y": 164,
+      "z": 2,
+      "rx": 0,
+      "ry": 118,
+      "rz": 0,
+      "scale": 1.83
+    },
+    "rounded": {
+      "x": 2,
+      "y": 211,
+      "z": -24,
+      "rx": -6,
+      "ry": 121,
+      "scale": 2.02
+    }
+  },
+  "mechanical-clockwork-headphones-roblox-1y1r4u6q.glb": {
+    "label": "Mechanical Clockwork Headphones Roblox 1Y1R4U6Q",
+    "attachment": "Head",
+    "default": {
+      "x": 0,
+      "y": 2,
+      "z": -493,
+      "rx": -90,
+      "ry": -50,
+      "rz": 0,
+      "scale": 2.0
+    },
+    "man": {
+      "x": -290,
+      "y": 909,
+      "z": -579,
+      "rx": 0,
+      "ry": 129,
+      "rz": 0,
+      "scale": 1.74
+    },
+    "woman": {
+      "x": 0,
+      "y": 178,
+      "z": 2,
+      "rx": 0,
+      "ry": 133,
+      "rz": 0,
+      "scale": 2.2
+    },
+    "rounded": {
+      "x": 0,
+      "y": 191,
+      "z": 2,
+      "rx": -6,
+      "ry": 129,
+      "rz": 0,
+      "scale": 1.87
+    }
   }
 }
