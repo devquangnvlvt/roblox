@@ -254,24 +254,22 @@ window.setDarkMode = function (data) {
     scene.background = new THREE.Color(0xffffff);
   }
 };
-function init() {
+async function init() {
   window.THREE = THREE;
   scene = new THREE.Scene();
-  // scene.background = new THREE.Color(0xffffff); // nền bg 3d // 0xffffff nền trắng, Xanh dương tối	0x1a1f2e
-  scene.background = null;
+  scene.background = new THREE.Color(0x808080); // nền bg 3d // 0xffffff nền trắng, Xanh dương tối	0x1a1f2e
+  // scene.background = null; // Bật nền trong suốt
   // Thiết lập Camera (Máy ảnh)
   const w = canvasMount.clientWidth || window.innerWidth;
   const h = canvasMount.clientHeight || window.innerHeight;
 
   camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
-  camera.position.set(0, 1.2, 4);
+  camera.position.set(0, 1.2, 1);
 
   renderer = new THREE.WebGLRenderer({
     antialias: true,
-    alpha: true,
     preserveDrawingBuffer: true,
   });
-  renderer.setClearColor(0xffffff, 0.1);
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(w, h);
   canvasMount.appendChild(renderer.domElement);
@@ -279,7 +277,7 @@ function init() {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.target.set(0, 1.0, 0);
-  controls.minDistance = 1.0;
+  controls.minDistance = 4.0;
   controls.maxDistance = 6.0;
   controls.enablePan = false;
   // Ánh sáng (Lighting)
@@ -302,9 +300,18 @@ function init() {
   injectCharacterSwitcher();
   injectControlPanel();
   injectZoomControls();
+
+  // Khôi phục phụ kiện đang mặc từ localStorage khi vừa mở trang web
+  var equippedAccessories = JSON.parse(window.localStorage.getItem("equipped_accessories")) || {};
+  Object.keys(equippedAccessories).forEach(category => {
+    if (activeAccessories.hasOwnProperty(category)) {
+      activeAccessories[category] = equippedAccessories[category];
+    }
+  });
+
+  await loadAccessoryConfigs(); // Load JSON config at start
   loadAvatar(currentCharId);
   bindUiEvents();
-  loadAccessoryConfigs(); // Load JSON config at start
 
   setTimeout(onResize, 100);
 }
@@ -2427,7 +2434,7 @@ function addAccessory(mesh, attachmentName = "Head") {
   }
   // Không gọi updateAccessoriesTransform() để không ghi đè tọa độ riêng của từng tóc
 }
-
+// 123
 function loadAccessoryFromFile(
   url,
   category,
@@ -2439,6 +2446,7 @@ function loadAccessoryFromFile(
   const activeCharId = forcedCharId || currentCharId;
 
   const filename = url.split("/").pop();
+
   let config = configObj;
   // Fallback map cho config trong trường hợp reload loadAvatar mà không có sẵn
   if (!config) {
@@ -2534,6 +2542,16 @@ function loadAccessoryFromFile(
       addAccessory(model, attachmentName);
       setLoadingVisible(false);
       console.log(`[Phụ kiện] Đã thêm: ${filename}`);
+      
+      // Sử dụng Object để lưu phụ kiện theo category (vd: hair: "toc1.gltf") 
+      // Điều này giúp tránh việc mảng cứ dài ra vô tận (bị trùng lặp) khi bạn thay đổi phụ kiện liên tục
+      var equippedAccessories = JSON.parse(window.localStorage.getItem("equipped_accessories")) || {};
+      
+      // Cập nhật phụ kiện mới cho bộ phận tương ứng
+      equippedAccessories[category] = filename;
+
+      // Lưu lại vào localStorage
+      window.localStorage.setItem("equipped_accessories", JSON.stringify(equippedAccessories));
     },
     undefined,
     (err) => {
@@ -2672,11 +2690,20 @@ window.setAccessories = function (data, charId = null) {
   }
   if (!Array.isArray(dataList)) return;
 
+  var equippedAccessories = JSON.parse(window.localStorage.getItem("equipped_accessories")) || {};
+
   dataList.forEach((item) => {
     const { key, value } = item;
     const meta = ACCESSORY_CATEGORY_MAP[key];
 
     if (meta && value) {
+      const filename = value.split("/").pop();
+        
+      // Nếu phụ kiện này đã có trong localStorage (đã mặc) thì không tải lại, không xóa
+      if (equippedAccessories[key] === filename) {
+        return;
+      }
+
       // 1. Xóa phụ kiện cũ cùng loại trước khi thêm mới
       clearAccessoryByCategory(key);
       activeAccessories[key] = value;

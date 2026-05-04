@@ -251,10 +251,10 @@ window.setDarkMode = function (data) {
     scene.background = new THREE.Color(0xffffff);
   }
 };
-function init() {
+async function init() {
   window.THREE = THREE;
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0xffffff); // nền bg 3d // 0xffffff nền trắng, Xanh dương tối	0x1a1f2e
+  scene.background = new THREE.Color(0x808080); // nền bg 3d // 0xffffff nền trắng, Xanh dương tối	0x1a1f2e
 
   // Thiết lập Camera (Máy ảnh)
   const w = canvasMount.clientWidth || window.innerWidth;
@@ -266,6 +266,7 @@ function init() {
   renderer = new THREE.WebGLRenderer({
     antialias: true,
     preserveDrawingBuffer: true,
+    alpha: true // Thêm thuộc tính này để hỗ trợ xuất ảnh nền trong suốt
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(w, h);
@@ -296,9 +297,19 @@ function init() {
 
   injectCharacterSwitcher();
   injectControlPanel();
+
+  // Khôi phục phụ kiện đang mặc từ localStorage khi vừa mở trang web
+  var equippedAccessories =
+    JSON.parse(window.localStorage.getItem("equipped_accessories")) || {};
+  Object.keys(equippedAccessories).forEach((category) => {
+    if (activeAccessories.hasOwnProperty(category)) {
+      activeAccessories[category] = equippedAccessories[category];
+    }
+  });
+
+  await loadAccessoryConfigs(); // Đợi tải JSON xong
   loadAvatar(currentCharId);
   bindUiEvents();
-  loadAccessoryConfigs(); // Load JSON config at start
 
   setTimeout(onResize, 100);
 }
@@ -2272,6 +2283,7 @@ function loadAccessoryFromFile(
   if (!avatar) return;
   const activeCharId = forcedCharId || currentCharId;
   const filename = url.split("/").pop();
+  console.log(filename);
   let config = configObj;
   // Fallback map cho config trong trường hợp reload loadAvatar mà không có sẵn
   if (!config) {
@@ -2363,7 +2375,16 @@ function loadAccessoryFromFile(
 
       addAccessory(model, attachmentName);
       setLoadingVisible(false);
-      console.log(`[Phụ kiện] Đã thêm: ${filename}`);
+      var equippedAccessories =
+        JSON.parse(window.localStorage.getItem("equipped_accessories")) || {};
+
+      equippedAccessories[category] = filename;
+
+      // Lưu vào localStorage
+      window.localStorage.setItem(
+        "equipped_accessories",
+        JSON.stringify(equippedAccessories),
+      );
     },
     undefined,
     (err) => {
@@ -2495,9 +2516,6 @@ window.clearAllAccessories = function () {
 
 //Hàm nhận mảng phụ kiện từ Kotlin
 window.setAccessories = function (data, charId = null) {
-  // 1. Xóa toàn bộ phụ kiện cũ trước khi nạp mới
-  window.clearAllAccessories();
-
   let dataList = data;
   if (typeof data === "string") {
     try {
@@ -2508,14 +2526,27 @@ window.setAccessories = function (data, charId = null) {
   }
   if (!Array.isArray(dataList)) return;
 
+  var equippedAccessories =
+    JSON.parse(window.localStorage.getItem("equipped_accessories")) || {};
+  console.log(equippedAccessories);
+
   dataList.forEach((item) => {
     const { key, value } = item;
     const meta = ACCESSORY_CATEGORY_MAP[key];
 
     if (meta && value) {
+      const filename = value.split("/").pop();
+
+      // Nếu phụ kiện này đã có trong localStorage không xóa
+      if (equippedAccessories[key] === filename) {
+        return;
+      }
+
+      // Xóa phụ kiện cũ cùng loại trước khi thêm mới (thay vì xóa sạch toàn bộ)
+      clearAccessoryByCategory(key);
       activeAccessories[key] = value;
 
-      // 2. Tải phụ kiện mới với tọa độ chuẩn của nhân vật được chỉ định
+      // Tải phụ kiện mới với tọa độ chuẩn của nhân vật được chỉ định
       const fullUrl = value.startsWith("http") ? value : meta.path + value;
       loadAccessoryFromFile(fullUrl, key, meta.attachment, null, charId);
     }
@@ -2544,4 +2575,28 @@ window.setItems = function (dataList, charId = null) {
   // 2. Áp dụng phụ kiện 3D
   // Luôn gọi để đảm bảo logic xóa phụ kiện cũ (clearAllAccessories) được thực thi
   window.setAccessories(accessoryTasks, charId);
+};
+window.captureScreen = function () {
+  const canvas = document.querySelector("canvas");
+
+  if (!canvas) {
+    console.log("❌ Không có canvas");
+    return;
+  }
+
+  camera.position.set(0, 1.5, 3); // 👈 chỉnh theo model của bạn
+  camera.lookAt(0, 1, 0);
+
+  if (window.controls) {
+    controls.target.set(0, 1, 0);
+    controls.update();
+  }
+
+  // Render cảnh hiện tại (giữ nguyên nền, không chỉnh trong suốt)
+  renderer.render(scene, camera);
+
+  // Chụp ảnh (toDataURL lấy luôn cảnh có nền)
+  const base64 = canvas.toDataURL("image/png");
+
+  Android.onCapture(base64);
 };
