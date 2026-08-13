@@ -162,6 +162,8 @@ let waistConfigMap = {};
 let compositeCanvas = null;
 let compositeCtx = null;
 let compositeTexture = null;
+const gltfLoader = new GLTFLoader();
+let activeLoads = 0;
 
 const shirtMappings = [
   [2, 10, 231, 8, 128, 64, 0],
@@ -251,22 +253,46 @@ window.setDarkMode = function (data) {
     scene.background = new THREE.Color(0xffffff);
   }
 };
+
+// Hàm này được gọi từ Kotlin để đổi nền
+window.changeBackground = function (value) {
+  // Lưu lại giá trị nền để dùng lúc chụp ảnh
+  window.currentBackgroundValue = value;
+
+  // Tắt nền của 3D để hiển thị nền CSS ở dưới
+  // scene.background = null;
+
+  // Nếu giá trị truyền vào là mã màu (ví dụ: #ff0000 hoặc rgb)
+  if (value.startsWith("#") || value.startsWith("rgb")) {
+    canvasMount.style.backgroundImage = "none";
+    canvasMount.style.backgroundColor = value;
+  }
+  // Nếu là đường dẫn ảnh hoặc Base64
+  else {
+    canvasMount.style.backgroundColor = "transparent";
+    canvasMount.style.backgroundImage = `url('${value}')`;
+    canvasMount.style.backgroundSize = "cover";
+    canvasMount.style.backgroundPosition = "center";
+  }
+};
+
 async function init() {
   window.THREE = THREE;
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x808080); // nền bg 3d // 0xffffff nền trắng, Xanh dương tối	0x1a1f2e
+  // scene.background = new THREE.Color(0x808080); // nền bg 3d // 0xffffff nền trắng, Xanh dương tối	0x1a1f2e
+  scene.background = null; // Bật nền trong suốt mặc định
 
   // Thiết lập Camera (Máy ảnh)
   const w = canvasMount.clientWidth || window.innerWidth;
   const h = canvasMount.clientHeight || window.innerHeight;
 
   camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
-  camera.position.set(0, 1.2, 4);
+  camera.position.set(0, 1.2, 2.8);
 
   renderer = new THREE.WebGLRenderer({
     antialias: true,
     preserveDrawingBuffer: true,
-    alpha: true // Thêm thuộc tính này để hỗ trợ xuất ảnh nền trong suốt
+    alpha: true, // Thêm thuộc tính này để hỗ trợ xuất ảnh nền trong suốt
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(w, h);
@@ -312,6 +338,7 @@ async function init() {
   bindUiEvents();
 
   setTimeout(onResize, 100);
+  window.changeBackground("#EFF6FF");
 }
 
 async function loadAccessoryConfigs() {
@@ -534,8 +561,10 @@ function populateAccessoryButtons() {
   });
   selHair.addEventListener("change", () => {
     const filename = selHair.value;
-    clearAccessoryByCategory("hair");
-    if (!filename) return;
+    if (!filename) {
+      clearAccessoryByCategory("hair");
+      return;
+    }
 
     activeTuningCategory = "hair";
     document.getElementById("lbl-tuning-target").textContent =
@@ -548,13 +577,17 @@ function populateAccessoryButtons() {
       "hair",
       (config && config.attachment) || "Head",
       config,
+      null,
+      filename,
     );
   });
 
   selGlasses.addEventListener("change", () => {
     const filename = selGlasses.value;
-    clearAccessoryByCategory("glasses");
-    if (!filename) return;
+    if (!filename) {
+      clearAccessoryByCategory("glasses");
+      return;
+    }
 
     activeTuningCategory = "glasses";
     document.getElementById("lbl-tuning-target").textContent =
@@ -567,13 +600,17 @@ function populateAccessoryButtons() {
       "glasses",
       (config && config.attachment) || "FaceCenter",
       config,
+      null,
+      filename,
     );
   });
 
   selWings.addEventListener("change", () => {
     const filename = selWings.value;
-    clearAccessoryByCategory("wing");
-    if (!filename) return;
+    if (!filename) {
+      clearAccessoryByCategory("wing");
+      return;
+    }
 
     activeTuningCategory = "wing";
     document.getElementById("lbl-tuning-target").textContent =
@@ -586,14 +623,17 @@ function populateAccessoryButtons() {
       "wing",
       (config && config.attachment) || "BodyBack",
       config,
+      null,
+      filename,
     );
   });
 
   selNeck.addEventListener("change", () => {
     const filename = selNeck.value;
-    clearAccessoryByCategory("neck");
-    if (!filename) return;
-
+    if (!filename) {
+      clearAccessoryByCategory("neck");
+      return;
+    }
     activeTuningCategory = "neck";
     document.getElementById("lbl-tuning-target").textContent =
       "🎯 Đang chỉnh: Vòng cổ";
@@ -605,14 +645,17 @@ function populateAccessoryButtons() {
       "neck",
       (config && config.attachment) || "Neck",
       config,
+      null,
+      filename,
     );
   });
 
   selRighthand.addEventListener("change", () => {
     const filename = selRighthand.value;
-    clearAccessoryByCategory("righthand");
-    if (!filename) return;
-
+    if (!filename) {
+      clearAccessoryByCategory("righthand");
+      return;
+    }
     activeTuningCategory = "righthand";
     document.getElementById("lbl-tuning-target").textContent =
       "🎯 Đang chỉnh: Tay phải";
@@ -624,14 +667,17 @@ function populateAccessoryButtons() {
       "righthand",
       (config && config.attachment) || "RightGrip",
       config,
+      null,
+      filename,
     );
   });
 
   selLefthand.addEventListener("change", () => {
     const filename = selLefthand.value;
-    clearAccessoryByCategory("lefthand");
-    if (!filename) return;
-
+    if (!filename) {
+      clearAccessoryByCategory("lefthand");
+      return;
+    }
     activeTuningCategory = "lefthand";
     document.getElementById("lbl-tuning-target").textContent =
       "🎯 Đang chỉnh: Tay trái";
@@ -643,14 +689,17 @@ function populateAccessoryButtons() {
       "lefthand",
       (config && config.attachment) || "LeftGrip",
       config,
+      null,
+      filename,
     );
   });
 
   selShoulder.addEventListener("change", () => {
     const filename = selShoulder.value;
-    clearAccessoryByCategory("shoulder");
-    if (!filename) return;
-
+    if (!filename) {
+      clearAccessoryByCategory("shoulder");
+      return;
+    }
     activeTuningCategory = "shoulder";
     document.getElementById("lbl-tuning-target").textContent =
       "🎯 Đang chỉnh: Vai";
@@ -662,14 +711,17 @@ function populateAccessoryButtons() {
       "shoulder",
       (config && config.attachment) || "LeftShoulder",
       config,
+      null,
+      filename,
     );
   });
 
   selHat.addEventListener("change", () => {
     const filename = selHat.value;
-    clearAccessoryByCategory("hat");
-    if (!filename) return;
-
+    if (!filename) {
+      clearAccessoryByCategory("hat");
+      return;
+    }
     activeTuningCategory = "hat";
     document.getElementById("lbl-tuning-target").textContent =
       "🎯 Đang chỉnh: Mũ";
@@ -681,14 +733,17 @@ function populateAccessoryButtons() {
       "hat",
       (config && config.attachment) || "Hat",
       config,
+      null,
+      filename,
     );
   });
 
   selWaist.addEventListener("change", () => {
     const filename = selWaist.value;
-    clearAccessoryByCategory("waist");
-    if (!filename) return;
-
+    if (!filename) {
+      clearAccessoryByCategory("waist");
+      return;
+    }
     activeTuningCategory = "waist";
     document.getElementById("lbl-tuning-target").textContent =
       "🎯 Đang chỉnh: Thắt lưng";
@@ -700,6 +755,8 @@ function populateAccessoryButtons() {
       "waist",
       (config && config.attachment) || "WaistCenter",
       config,
+      null,
+      filename,
     );
   });
 }
@@ -1074,7 +1131,8 @@ function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
     else if (lowCat === "hat") config = hatConfigMap[filename];
     else if (lowCat === "waist") config = waistConfigMap[filename];
 
-    clearAccessoryByCategory(category, false);
+    // Không xóa tại đây, loadAccessoryFromFile sẽ tự xử lý khi load xong
+    // clearAccessoryByCategory(category, false);
 
     // ƯU TIÊN URL NGOÀI: Nếu value không có http, thì ghép với meta.path (URL ngoài)
     const fullUrl = value.startsWith("http") ? value : meta.path + value;
@@ -1085,6 +1143,7 @@ function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
       (config && config.attachment) || meta.attachment || "Head",
       config,
       currentCharId, // Ép nạp đúng tọa độ của nhân vật hiện tại
+      value, // Để kiểm tra tính hợp lệ khi load xong
     );
   });
 }
@@ -2279,6 +2338,7 @@ function loadAccessoryFromFile(
   attachmentName = "Head",
   configObj = null,
   forcedCharId = null,
+  targetValue = null,
 ) {
   if (!avatar) return;
   const activeCharId = forcedCharId || currentCharId;
@@ -2340,11 +2400,23 @@ function loadAccessoryFromFile(
     syncUiSlider("acc-scale", localScale * 100);
   }
 
+  activeLoads++;
   setLoadingVisible(true);
-  const loader = new GLTFLoader();
-  loader.load(
+
+  gltfLoader.load(
     url,
     (gltf) => {
+      activeLoads--;
+      if (activeLoads <= 0) setLoadingVisible(false);
+
+      // Nếu đã có phụ kiện mới hơn được yêu cầu cho category này, bỏ qua kết quả load này
+      if (targetValue && activeAccessories[category] !== targetValue) {
+        console.log(
+          `[LoadDiscarded] ${category}: ${targetValue} is no longer active.`,
+        );
+        return;
+      }
+
       const model = gltf.scene;
 
       // Căn giữa model về gốc (0,0,0)
@@ -2370,11 +2442,13 @@ function loadAccessoryFromFile(
       );
       model.scale.setScalar(localScale);
 
+      // Xóa phụ kiện cũ ngay trước khi thêm phụ kiện mới để tránh bị "flicker" (nhân vật bị trống phụ kiện trong lúc load)
+      clearAccessoryByCategory(category, false);
+
       // Lưu model pointer
       activeCategoryModels[category] = model;
 
       addAccessory(model, attachmentName);
-      setLoadingVisible(false);
       var equippedAccessories =
         JSON.parse(window.localStorage.getItem("equipped_accessories")) || {};
 
@@ -2388,7 +2462,8 @@ function loadAccessoryFromFile(
     },
     undefined,
     (err) => {
-      setLoadingVisible(false);
+      activeLoads--;
+      if (activeLoads <= 0) setLoadingVisible(false);
       // Bỏ active nút nếu load thất bại
       const failBtn = document.querySelector(
         `.hair-btn[data-filename="${filename}"]`,
@@ -2534,21 +2609,38 @@ window.setAccessories = function (data, charId = null) {
     const { key, value } = item;
     const meta = ACCESSORY_CATEGORY_MAP[key];
 
-    if (meta && value) {
-      const filename = value.split("/").pop();
+    if (meta) {
+      if (value) {
+        const filename = value.split("/").pop();
 
-      // Nếu phụ kiện này đã có trong localStorage không xóa
-      if (equippedAccessories[key] === filename) {
-        return;
+        // Nếu phụ kiện này đã có trong localStorage không xóa
+        if (equippedAccessories[key] === filename) {
+          return;
+        }
+
+        // Không xóa phụ kiện ngay tại đây để tránh flicker. loadAccessoryFromFile sẽ tự xóa phụ kiện cũ khi load xong.
+        activeAccessories[key] = value;
+
+        const fullUrl = value.startsWith("http") ? value : meta.path + value;
+        loadAccessoryFromFile(
+          fullUrl,
+          key,
+          meta.attachment,
+          null,
+          charId,
+          value,
+        );
+      } else {
+        clearAccessoryByCategory(key);
+
+        if (equippedAccessories[key]) {
+          delete equippedAccessories[key];
+          window.localStorage.setItem(
+            "equipped_accessories",
+            JSON.stringify(equippedAccessories),
+          );
+        }
       }
-
-      // Xóa phụ kiện cũ cùng loại trước khi thêm mới (thay vì xóa sạch toàn bộ)
-      clearAccessoryByCategory(key);
-      activeAccessories[key] = value;
-
-      // Tải phụ kiện mới với tọa độ chuẩn của nhân vật được chỉ định
-      const fullUrl = value.startsWith("http") ? value : meta.path + value;
-      loadAccessoryFromFile(fullUrl, key, meta.attachment, null, charId);
     }
   });
 };
@@ -2592,11 +2684,70 @@ window.captureScreen = function () {
     controls.update();
   }
 
-  // Render cảnh hiện tại (giữ nguyên nền, không chỉnh trong suốt)
+  // Render cảnh hiện tại
   renderer.render(scene, camera);
 
-  // Chụp ảnh (toDataURL lấy luôn cảnh có nền)
-  const base64 = canvas.toDataURL("image/png");
+  // --- BẮT ĐẦU XỬ LÝ GỘP NỀN CSS VÀ CANVAS 3D ---
+  // Tạo một canvas tạm 2D để vẽ nền ở dưới và 3D ở trên
+  const tempCanvas = document.createElement("canvas");
+  tempCanvas.width = canvas.width;
+  tempCanvas.height = canvas.height;
+  const ctx = tempCanvas.getContext("2d");
 
-  Android.onCapture(base64);
+  // Hàm hoàn thiện việc chụp
+  const processCapture = () => {
+    // Vẽ phần 3D (canvas chính) đè lên
+    ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
+    const base64 = tempCanvas.toDataURL("image/png");
+    if (window.Android && window.Android.onCapture) {
+      Android.onCapture(base64);
+    }
+  };
+
+  const bgValue = window.currentBackgroundValue;
+
+  if (bgValue) {
+    if (bgValue.startsWith("#") || bgValue.startsWith("rgb")) {
+      // 1. Vẽ màu nền
+      ctx.fillStyle = bgValue;
+      ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+      processCapture();
+    } else {
+      // 2. Vẽ ảnh nền (Base64 hoặc URL)
+      const img = new Image();
+      img.crossOrigin = "Anonymous";
+      img.onload = () => {
+        // Tính toán để vẽ giống hệt background-size: cover; background-position: center;
+        const canvasRatio = tempCanvas.width / tempCanvas.height;
+        const imgRatio = img.width / img.height;
+        let drawWidth = tempCanvas.width;
+        let drawHeight = tempCanvas.height;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        if (canvasRatio > imgRatio) {
+          drawHeight = tempCanvas.width / imgRatio;
+          offsetY = (tempCanvas.height - drawHeight) / 2;
+        } else {
+          drawWidth = tempCanvas.height * imgRatio;
+          offsetX = (tempCanvas.width - drawWidth) / 2;
+        }
+
+        ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+        processCapture();
+      };
+      img.onerror = () => {
+        console.error("Lỗi khi tải ảnh nền để chụp, sẽ chụp ảnh không nền.");
+        processCapture();
+      };
+      img.src = bgValue;
+    }
+  } else {
+    // 3. Nếu không có nền nào được set, vẽ mỗi 3D (nền trong suốt)
+    processCapture();
+  }
+};
+window.clearStorage = function () {
+  localStorage.clear();
+  clearAllAccessories();
 };

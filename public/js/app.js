@@ -33,6 +33,19 @@ const r15PantsPartNames = [
   "RightLowerLeg",
   "RightFoot",
 ];
+const API_BASE_URL =
+  "https://lvtglobal.tech/public/app/ST253_ClothesSkinsMakerforRBX_v2/3D/";
+const ACCESSORY_CATEGORY_MAP = {
+  hair: { path: API_BASE_URL + "/hair/", attachment: "Head" },
+  glasses: { path: API_BASE_URL + "/glasses/", attachment: "FaceCenter" },
+  wing: { path: API_BASE_URL + "/wing/", attachment: "BodyBack" },
+  neck: { path: API_BASE_URL + "/neck/", attachment: "Neck" },
+  righthand: { path: API_BASE_URL + "/righthand/", attachment: "RightGrip" },
+  lefthand: { path: API_BASE_URL + "/lefthand/", attachment: "LeftGrip" },
+  shoulder: { path: API_BASE_URL + "/shoulder/", attachment: "LeftShoulder" },
+  hat: { path: API_BASE_URL + "/hat/", attachment: "Hat" },
+  waist: { path: API_BASE_URL + "/waist/", attachment: "WaistCenter" },
+};
 const THEME_CONFIG = {
   dark: {
     background: 0x0b0e11,
@@ -51,7 +64,7 @@ const CHARACTERS = [
     id: "default",
     label: "Nhân vật 1",
     icon: "1",
-    path: "public/models/r15.glb",
+    path: "models/r15.glb",
     type: "glb",
     uvType: "raw",
     faceConfig: { offsetX: 70, offsetY: 45, scaleX: 1.2, scaleY: 1.2 },
@@ -61,7 +74,7 @@ const CHARACTERS = [
     id: "man",
     label: "Nhân vật man",
     icon: "2",
-    path: "public/models/man-r15.glb",
+    path: "models/man-r15.glb",
     type: "glb",
     uvType: "composite",
     faceConfig: { offsetX: 70, offsetY: 55, scaleX: 1.2, scaleY: 1.2 },
@@ -71,7 +84,7 @@ const CHARACTERS = [
     id: "woman",
     label: "Nhân vật woman",
     icon: "3",
-    path: "public/models/woman-r15.glb",
+    path: "models/woman-r15.glb",
     type: "glb",
     uvType: "composite",
     faceConfig: { offsetX: 70, offsetY: 35, scaleX: 1.1, scaleY: 1.1 },
@@ -81,33 +94,18 @@ const CHARACTERS = [
     id: "rounded",
     label: "Nhân vật rounded",
     icon: "4",
-    path: "public/models/rounded-r15.glb",
+    path: "models/rounded-r15.glb",
     type: "glb",
     uvType: "composite",
     faceConfig: { offsetX: 70, offsetY: 65, scaleX: 1.3, scaleY: 1.25 },
     sockets: { eyesY: 0.62, noseY: 0.52, mouthY: 0.42, zOffset: 0.55 },
   },
 ];
-let currentSkinColor = "#ffffffff"; // màu da
 let currentCharId = "default";
 let currentShirtTexture = null;
 let currentPantsTexture = null;
 let currentFaceTexture = null;
 let isLoading = false;
-
-const API_BASE_URL = "public/image/";
-const ACCESSORY_CATEGORY_MAP = {
-  hair: { path: API_BASE_URL + "hair/", attachment: "Head" },
-  glasses: { path: API_BASE_URL + "glasses/", attachment: "FaceCenter" },
-  wing: { path: API_BASE_URL + "wing/", attachment: "BodyBack" },
-  wings: { path: API_BASE_URL + "wing/", attachment: "BodyBack" },
-  neck: { path: API_BASE_URL + "neck/", attachment: "Neck" },
-  righthand: { path: API_BASE_URL + "righthand/", attachment: "RightGrip" },
-  lefthand: { path: API_BASE_URL + "lefthand/", attachment: "LeftGrip" },
-  shoulder: { path: API_BASE_URL + "shoulder/", attachment: "LeftShoulder" },
-  hat: { path: API_BASE_URL + "hat/", attachment: "Hat" },
-  waist: { path: API_BASE_URL + "waist/", attachment: "WaistCenter" },
-};
 
 // Face customization state
 let faceOffsetX = 0;
@@ -120,7 +118,7 @@ let currentEnvMode = "dark";
 const activeAccessories = {
   hair: null,
   glasses: null,
-  wings: null,
+  wing: null,
   neck: null,
   righthand: null,
   lefthand: null,
@@ -132,7 +130,7 @@ let activeTuningCategory = "hair";
 const activeCategoryModels = {
   hair: null,
   glasses: null,
-  wings: null,
+  wing: null,
   neck: null,
   righthand: null,
   lefthand: null,
@@ -149,12 +147,11 @@ let accRotationX = 0;
 let accRotationY = 0;
 let accRotationZ = 0;
 let accScale = 1.0;
-let isZoomLocked = false; // zoom
 
 // Accessory Map for dynamic loading
 let accessoryConfigMap = {};
 let glassesConfigMap = {};
-let wingsConfigMap = {};
+let wingConfigMap = {};
 let neckConfigMap = {};
 let righthandConfigMap = {};
 let lefthandConfigMap = {};
@@ -254,21 +251,42 @@ window.setDarkMode = function (data) {
     scene.background = new THREE.Color(0xffffff);
   }
 };
+
+// Hàm này đổi nền
+window.changeBackground = function(value) {
+  window.currentBackgroundValue = value;
+ // scene.background = null;
+  if (value.startsWith('#') || value.startsWith('rgb')) {
+    canvasMount.style.backgroundImage = 'none';
+    canvasMount.style.backgroundColor = value;
+  }
+  else {
+    canvasMount.style.backgroundColor = 'transparent';
+    canvasMount.style.backgroundImage = `url('${value}')`;
+    canvasMount.style.backgroundSize = 'cover';
+    canvasMount.style.backgroundPosition = 'center';
+  }
+};
 async function init() {
+
+
+
   window.THREE = THREE;
   scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x808080); // nền bg 3d // 0xffffff nền trắng, Xanh dương tối	0x1a1f2e
-  // scene.background = null; // Bật nền trong suốt
+// scene.background = new THREE.Color(0x808080); // nền bg 3d // 0xffffff nền trắng, Xanh dương tối	0x1a1f2e
+  scene.background = null; // Bật nền trong suốt mặc định
+
   // Thiết lập Camera (Máy ảnh)
   const w = canvasMount.clientWidth || window.innerWidth;
   const h = canvasMount.clientHeight || window.innerHeight;
 
   camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 1000);
-  camera.position.set(0, 1.2, 1);
+  camera.position.set(0, 1.2, 2.5);
 
   renderer = new THREE.WebGLRenderer({
     antialias: true,
     preserveDrawingBuffer: true,
+   alpha: true // Thêm thuộc tính này để hỗ trợ xuất ảnh nền trong suốt
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(w, h);
@@ -277,7 +295,7 @@ async function init() {
   controls = new OrbitControls(camera, renderer.domElement);
   controls.enableDamping = true;
   controls.target.set(0, 1.0, 0);
-  controls.minDistance = 4.0;
+  controls.minDistance = 1.0;
   controls.maxDistance = 6.0;
   controls.enablePan = false;
   // Ánh sáng (Lighting)
@@ -299,27 +317,28 @@ async function init() {
 
   injectCharacterSwitcher();
   injectControlPanel();
-  injectZoomControls();
 
   // Khôi phục phụ kiện đang mặc từ localStorage khi vừa mở trang web
-  var equippedAccessories = JSON.parse(window.localStorage.getItem("equipped_accessories")) || {};
-  Object.keys(equippedAccessories).forEach(category => {
+  var equippedAccessories =
+    JSON.parse(window.localStorage.getItem("equipped_accessories")) || {};
+  Object.keys(equippedAccessories).forEach((category) => {
     if (activeAccessories.hasOwnProperty(category)) {
       activeAccessories[category] = equippedAccessories[category];
     }
   });
 
-  await loadAccessoryConfigs(); // Load JSON config at start
+  await loadAccessoryConfigs(); // Đợi tải JSON xong
   loadAvatar(currentCharId);
   bindUiEvents();
 
   setTimeout(onResize, 100);
+    window.changeBackground('#EFF6FF');
 }
 
 async function loadAccessoryConfigs() {
   const t = Date.now(); // Cache-buster
   try {
-    const res = await fetch(`public/js/data/accessories_config.json?t=${t}`);
+    const res = await fetch(`js/data/accessories_config.json?t=${t}`);
     if (!res.ok) throw new Error("Could not find accessories_config.json");
     accessoryConfigMap = await res.json();
     console.log(
@@ -328,7 +347,7 @@ async function loadAccessoryConfigs() {
     );
 
     try {
-      const gRes = await fetch(`public/js/data/glasses_config.json?t=${t}`);
+      const gRes = await fetch(`js/data/glasses_config.json?t=${t}`);
       if (gRes.ok) {
         glassesConfigMap = await gRes.json();
         console.log(
@@ -341,20 +360,20 @@ async function loadAccessoryConfigs() {
     }
 
     try {
-      const wRes = await fetch(`public/js/data/wings_config.json?t=${t}`);
+      const wRes = await fetch(`js/data/wing_config.json?t=${t}`);
       if (wRes.ok) {
-        wingsConfigMap = await wRes.json();
+        wingConfigMap = await wRes.json();
         console.log(
           "Wings configurations loaded:",
-          Object.keys(wingsConfigMap).length,
+          Object.keys(wingConfigMap).length,
         );
       }
     } catch (e) {
-      console.warn("No wings config found");
+      console.warn("No wing config found");
     }
 
     try {
-      const nRes = await fetch(`public/js/data/neck_config.json?t=${t}`);
+      const nRes = await fetch(`js/data/neck_config.json?t=${t}`);
       if (nRes.ok) {
         neckConfigMap = await nRes.json();
         console.log(
@@ -367,7 +386,7 @@ async function loadAccessoryConfigs() {
     }
 
     try {
-      const rhRes = await fetch(`public/js/data/righthand_config.json?t=${t}`);
+      const rhRes = await fetch(`js/data/righthand_config.json?t=${t}`);
       if (rhRes.ok) {
         righthandConfigMap = await rhRes.json();
         console.log(
@@ -380,7 +399,7 @@ async function loadAccessoryConfigs() {
     }
 
     try {
-      const lhRes = await fetch(`public/js/data/lefthand_config.json?t=${t}`);
+      const lhRes = await fetch(`js/data/lefthand_config.json?t=${t}`);
       if (lhRes.ok) {
         lefthandConfigMap = await lhRes.json();
         console.log(
@@ -393,7 +412,7 @@ async function loadAccessoryConfigs() {
     }
 
     try {
-      const shRes = await fetch(`public/js/data/shoulder_config.json?t=${t}`);
+      const shRes = await fetch(`js/data/shoulder_config.json?t=${t}`);
       if (shRes.ok) {
         shoulderConfigMap = await shRes.json();
         console.log(
@@ -406,7 +425,7 @@ async function loadAccessoryConfigs() {
     }
 
     try {
-      const hRes = await fetch(`public/js/data/hat_config.json?t=${t}`);
+      const hRes = await fetch(`js/data/hat_config.json?t=${t}`);
       if (hRes.ok) {
         hatConfigMap = await hRes.json();
         console.log(
@@ -419,7 +438,7 @@ async function loadAccessoryConfigs() {
     }
 
     try {
-      const waistRes = await fetch(`public/js/data/waist_config.json?t=${t}`);
+      const waistRes = await fetch(`js/data/waist_config.json?t=${t}`);
       if (waistRes.ok) {
         waistConfigMap = await waistRes.json();
         console.log(
@@ -443,7 +462,7 @@ async function loadAccessoryConfigs() {
 function populateAccessoryButtons() {
   const selHair = document.getElementById("hair-select");
   const selGlasses = document.getElementById("glasses-select");
-  const selWings = document.getElementById("wings-select");
+  const selWings = document.getElementById("wing-select");
   const selNeck = document.getElementById("neck-select");
   const selRighthand = document.getElementById("righthand-select");
   const selLefthand = document.getElementById("lefthand-select");
@@ -487,7 +506,7 @@ function populateAccessoryButtons() {
     selGlasses.appendChild(opt);
   });
 
-  Object.entries(wingsConfigMap).forEach(([filename, config]) => {
+  Object.entries(wingConfigMap).forEach(([filename, config]) => {
     const opt = document.createElement("option");
     opt.value = filename;
     opt.textContent = config.label || filename;
@@ -546,7 +565,7 @@ function populateAccessoryButtons() {
 
     const config = accessoryConfigMap[filename];
     loadAccessoryFromFile(
-      "public/image/hair/" + filename,
+      "image/hair/" + filename,
       "hair",
       (config && config.attachment) || "Head",
       config,
@@ -565,7 +584,7 @@ function populateAccessoryButtons() {
 
     const config = glassesConfigMap[filename];
     loadAccessoryFromFile(
-      "public/image/glasses/" + filename,
+      "image/glasses/" + filename,
       "glasses",
       (config && config.attachment) || "FaceCenter",
       config,
@@ -574,18 +593,18 @@ function populateAccessoryButtons() {
 
   selWings.addEventListener("change", () => {
     const filename = selWings.value;
-    clearAccessoryByCategory("wings");
+    clearAccessoryByCategory("wing");
     if (!filename) return;
 
-    activeTuningCategory = "wings";
+    activeTuningCategory = "wing";
     document.getElementById("lbl-tuning-target").textContent =
       "🎯 Đang chỉnh: Cánh";
-    activeAccessories.wings = filename;
+    activeAccessories.wing = filename;
 
-    const config = wingsConfigMap[filename];
+    const config = wingConfigMap[filename];
     loadAccessoryFromFile(
-      "public/image/wing/" + filename,
-      "wings",
+      "image/wing/" + filename,
+      "wing",
       (config && config.attachment) || "BodyBack",
       config,
     );
@@ -603,7 +622,7 @@ function populateAccessoryButtons() {
 
     const config = neckConfigMap[filename];
     loadAccessoryFromFile(
-      "public/image/neck/" + filename,
+      "image/neck/" + filename,
       "neck",
       (config && config.attachment) || "Neck",
       config,
@@ -622,7 +641,7 @@ function populateAccessoryButtons() {
 
     const config = righthandConfigMap[filename];
     loadAccessoryFromFile(
-      "public/image/righthand/" + filename,
+      "image/righthand/" + filename,
       "righthand",
       (config && config.attachment) || "RightGrip",
       config,
@@ -641,7 +660,7 @@ function populateAccessoryButtons() {
 
     const config = lefthandConfigMap[filename];
     loadAccessoryFromFile(
-      "public/image/lefthand/" + filename,
+      "image/lefthand/" + filename,
       "lefthand",
       (config && config.attachment) || "LeftGrip",
       config,
@@ -660,7 +679,7 @@ function populateAccessoryButtons() {
 
     const config = shoulderConfigMap[filename];
     loadAccessoryFromFile(
-      "public/image/shoulder/" + filename,
+      "image/shoulder/" + filename,
       "shoulder",
       (config && config.attachment) || "LeftShoulder",
       config,
@@ -679,7 +698,7 @@ function populateAccessoryButtons() {
 
     const config = hatConfigMap[filename];
     loadAccessoryFromFile(
-      "public/image/hat/" + filename,
+      "image/hat/" + filename,
       "hat",
       (config && config.attachment) || "Hat",
       config,
@@ -698,7 +717,7 @@ function populateAccessoryButtons() {
 
     const config = waistConfigMap[filename];
     loadAccessoryFromFile(
-      "public/image/waist/" + filename,
+      "image/waist/" + filename,
       "waist",
       (config && config.attachment) || "WaistCenter",
       config,
@@ -714,7 +733,7 @@ function injectCharacterSwitcher() {
       bottom: 24px;
       left: 50%;
       transform: translateX(-50%);
-      display: flex;
+      display: none;
       gap: 10px;
       z-index: 200;
       background: rgba(11,14,17,0.72);
@@ -805,11 +824,11 @@ function injectCharacterSwitcher() {
 
   document.body.appendChild(bar);
 
-  // // Loading spinner
-  // const loader = document.createElement("div");
-  // loader.id = "char-loading";
-  // loader.innerHTML = `<div class="char-spinner"></div><span>Đang tải nhân vật…</span>`;
-  // document.body.appendChild(loader);
+  // Loading spinner
+  //  const loader = document.createElement("div");
+  //  loader.id = "char-loading";
+  //  loader.innerHTML = `<div class="char-spinner"></div><span>Đang tải nhân vật…</span>`;
+  //  document.body.appendChild(loader);
 }
 
 function setLoadingVisible(visible) {
@@ -845,7 +864,7 @@ function loadAvatar(id) {
   // Clear accessories when changing character
   clearAccessoryByCategory("hair", false);
   clearAccessoryByCategory("glasses", false);
-  clearAccessoryByCategory("wings", false);
+  clearAccessoryByCategory("wing", false);
   clearAccessoryByCategory("neck", false);
   clearAccessoryByCategory("righthand", false);
   clearAccessoryByCategory("lefthand", false);
@@ -879,26 +898,12 @@ function loadAvatar(id) {
 
 // pantsMaxY, headMinY: ngưỡng Y (local geometry space) chỉ dùng khi isOBJ=true
 function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
-  const shirtKeywords = [
-    "arm",
-    "hand",
-    "shoulder",
-    "wrist",
-    "elbow",
-    "torso",
-    "upper",
-    "lower",
-  ];
-  const pantsKeywords = ["leg", "foot", "hip", "thigh", "knee", "toe"];
-
   avatar = obj;
   avatar.rotation.y = Math.PI;
   scene.add(avatar);
 
-  const lowShirtNames = r15ShirtPartNames.map((n) => n.toLowerCase());
-  const lowPantsNames = r15PantsPartNames.map((n) => n.toLowerCase());
-  const shirtNameSet = new Set(lowShirtNames);
-  const pantsNameSet = new Set(lowPantsNames);
+  const shirtNameSet = new Set(r15ShirtPartNames);
+  const pantsNameSet = new Set(r15PantsPartNames);
 
   avatar.traverse((child) => {
     if (!child.isMesh) return;
@@ -908,16 +913,7 @@ function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
       child.material && child.material.isMaterial
         ? child.material.clone()
         : new THREE.MeshStandardMaterial();
-    cloned.color.set(currentSkinColor);
-
-    // QUAN TRỌNG: Xóa sạch toàn bộ texture có sẵn trong file 3D để nhân vật ban đầu luôn màu xám
-    cloned.map = null;
-    cloned.emissiveMap = null;
-    cloned.normalMap = null;
-    cloned.roughnessMap = null;
-    cloned.metalnessMap = null;
-    cloned.aoMap = null;
-
+    cloned.color.set(0xbfc5d1);
     cloned.metalness = 0;
     cloned.roughness = 0.9;
     cloned.side = isOBJ ? THREE.DoubleSide : THREE.FrontSide;
@@ -928,6 +924,9 @@ function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
 
     if (isOBJ && pantsMaxY !== null) {
       // ── Phân 3 vùng theo Y-centroid (local geometry space) ────────────
+      // Zone 1 (dưới): centroid < pantsMaxY   → pants (chân)
+      // Zone 2 (giữa): pantsMaxY ≤ centroid < headMinY → shirt (áo)
+      // Zone 3 (đầu): centroid ≥ headMinY        → không texture (đầu, da)
       const pos = child.geometry && child.geometry.attributes.position;
       if (pos && pos.count > 0) {
         let sumY = 0;
@@ -942,26 +941,11 @@ function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
         }
       }
     } else {
-      // GLB: dùng tên mesh và từ khóa để nhận diện
+      // GLB: dùng tên mesh chuẩn của Roblox R15 (linh hoạt hơn với chữ hoa/thường)
       const lowName = child.name.toLowerCase();
-
-      const isShirtKeyword = shirtKeywords.some((k) => lowName.includes(k));
-      const isPantsKeyword = pantsKeywords.some((k) => lowName.includes(k));
-
-      if (shirtNameSet.has(lowName) || isShirtKeyword) {
-        if (lowPantsNames.includes(lowName) || isPantsKeyword) {
-          pantsTargets.push(child);
-        } else {
-          shirtTargets.push(child);
-        }
-      } else if (pantsNameSet.has(lowName) || isPantsKeyword) {
-        pantsTargets.push(child);
-      } else if (lowName.includes("head") || lowName.includes("face")) {
-        headTargets.push(child);
-      } else {
-        // Mặc định cho vào phần thân nếu không xác định được
-        shirtTargets.push(child);
-      }
+      if (shirtNameSet.has(child.name)) shirtTargets.push(child);
+      else if (pantsNameSet.has(child.name)) pantsTargets.push(child);
+      else if (lowName.includes("head")) headTargets.push(child);
     }
   });
 
@@ -1035,19 +1019,11 @@ function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
         else shirtTargets.push(p.mesh);
       });
     }
-
-    console.log(
-      `Geometry fallback result — shirt:${shirtTargets.length} pants:${pantsTargets.length}`,
-    );
   }
-
-  console.log(
-    `Avatar (${currentCharId}) loaded — shirt:${shirtTargets.length} pants:${pantsTargets.length}`,
-  );
 
   // Giữ nguyên quần áo khi đổi nhân vật
   if (currentShirtTexture) applyClothingTexture("shirt", currentShirtTexture);
-  if (currentPantsTexture) applyClothingTexture("pants", currentPantsTexture);
+  if (currentPantsTexture) applyClothingTexture("pant", currentPantsTexture);
   if (currentFaceTexture) applyFaceTexture();
 
   isLoading = false;
@@ -1057,7 +1033,7 @@ function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
   if (!currentShirtTexture && !currentPantsTexture && !currentFaceTexture) {
     const demoLoader = new THREE.TextureLoader();
     demoLoader.load(
-      "public/image/shirts/1.png",
+      "image/shirts/1.png",
       (tex) => {
         tex.colorSpace = THREE.SRGBColorSpace;
         tex.flipY = false;
@@ -1069,7 +1045,7 @@ function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
     );
 
     demoLoader.load(
-      "public/image/pants/0.png",
+      "image/pants/1.png",
       (tex) => {
         tex.colorSpace = THREE.SRGBColorSpace;
         tex.flipY = false;
@@ -1082,7 +1058,7 @@ function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
 
     // Demo face
     demoLoader.load(
-      "public/image/faces/3.png",
+      "image/faces/1.png",
       (tex) => {
         tex.colorSpace = THREE.SRGBColorSpace;
         tex.flipY = false;
@@ -1095,18 +1071,15 @@ function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
   }
 
   // Reload tất cả phụ kiện đang active với tọa độ của nhân vật mới
-  // Reload tất cả phụ kiện đang mặc khi đổi nhân vật
   Object.keys(activeAccessories).forEach((category) => {
     const value = activeAccessories[category];
     if (!value) return;
 
-    const meta = ACCESSORY_CATEGORY_MAP[category];
-    if (!meta) return;
+    const meta = ACCESSORY_CATEGORY_MAP[category] || {
+      path: API_BASE_URL + category + "/",
+      attachment: "Head",
+    };
 
-    // 1. Xác định URL đầy đủ
-    const fullUrl = value.startsWith("http") ? value : meta.path + value;
-
-    // 2. Tìm config tọa độ tương ứng
     const filename = value.split("/").pop();
     let config = null;
     const lowCat = category.toLowerCase();
@@ -1114,17 +1087,19 @@ function onAvatarLoaded(obj, isOBJ = false, pantsMaxY = null, headMinY = null) {
     if (lowCat === "hair") config = accessoryConfigMap[filename];
     else if (lowCat === "glasses") config = glassesConfigMap[filename];
     else if (lowCat === "wing" || lowCat === "wings")
-      config = wingsConfigMap[filename];
+      config = wingConfigMap[filename];
     else if (lowCat === "neck") config = neckConfigMap[filename];
     else if (lowCat === "righthand") config = righthandConfigMap[filename];
     else if (lowCat === "lefthand") config = lefthandConfigMap[filename];
     else if (lowCat === "shoulder") config = shoulderConfigMap[filename];
     else if (lowCat === "hat") config = hatConfigMap[filename];
     else if (lowCat === "waist") config = waistConfigMap[filename];
-    else config = accessoryConfigMap[filename];
 
-    // 3. Tiến hành gỡ đồ cũ và nạp đồ mới lên nhân vật mới
     clearAccessoryByCategory(category, false);
+
+    // ƯU TIÊN URL NGOÀI: Nếu value không có http, thì ghép với meta.path (URL ngoài)
+    const fullUrl = value.startsWith("http") ? value : meta.path + value;
+
     loadAccessoryFromFile(
       fullUrl,
       category,
@@ -1172,7 +1147,6 @@ function fitModel(obj) {
 
 function loadGLB(path) {
   const loader = new GLTFLoader();
-  loader.setCrossOrigin("anonymous");
   loader.load(
     path,
     (gltf) => {
@@ -1191,7 +1165,6 @@ function loadGLB(path) {
 
 function loadOBJ(path) {
   const loader = new OBJLoader();
-  loader.setCrossOrigin("anonymous");
   loader.load(
     path,
     (obj) => {
@@ -1231,45 +1204,21 @@ function bindUiEvents() {
   // Base64 entry points
   window.setShirtFromBase64 = (base) =>
     window.loadOutfit({ shirt: base }, true);
-  window.setPantsFromBase64 = (base) =>
-    window.loadOutfit({ pants: base }, true);
+  window.setPantsFromBase64 = (base) => window.loadOutfit({ pant: base }, true);
   window.setFaceFromBase64 = (base) => window.loadOutfit({ face: base }, true);
 
   // URL entry points
   window.setShirtFromUrl = (url) => window.loadOutfit({ shirt: url }, false);
-  window.setPantsFromUrl = (url) => window.loadOutfit({ pants: url }, false);
+  window.setPantsFromUrl = (url) => window.loadOutfit({ pant: url }, false);
   window.setFaceFromUrl = (url) => window.loadOutfit({ face: url }, false);
   window.setComboFromUrl = (s, p) =>
-    window.loadOutfit({ shirt: s, pants: p }, false);
+    window.loadOutfit({ shirt: s, pant: p }, false);
   window.setOutfit = (config) => window.loadOutfit(config, false);
 
   window.clearShirt = () => clearClothingTexture("shirt");
-  window.clearPants = () => clearClothingTexture("pants");
+  window.clearPants = () => clearClothingTexture("pant");
   window.clearFace = () => clearFaceTexture();
   window.switchCharacter = switchCharacter;
-
-  window.setSkinColor = (hexString) => {
-    if (!hexString.startsWith("#")) {
-      hexString = "#" + hexString;
-    }
-    currentSkinColor = hexString;
-
-    if (!avatar) return;
-
-    const charInfo = CHARACTERS.find((c) => c.id === currentCharId);
-    if (charInfo && charInfo.uvType === "composite") {
-      updateCompositeTexture();
-      updateFaceTexture();
-    } else {
-      // Dành cho GLB raw hoặc OBJ
-      const color = new THREE.Color(currentSkinColor);
-      shirtTargets.concat(pantsTargets).forEach((mesh) => {
-        mesh.material.color.set(color);
-        mesh.material.needsUpdate = true;
-      });
-      updateFaceTexture();
-    }
-  };
 }
 
 // ── Unified Outfit Manager ──────────────────────────────────────────────────
@@ -1314,11 +1263,10 @@ function applyCurrentOutfit() {
  */
 window.loadOutfit = function (config, isBase64 = false) {
   const loader = new THREE.TextureLoader();
-  loader.setCrossOrigin("anonymous");
   const tasks = [];
 
   if (config.shirt) tasks.push({ type: "shirt", data: config.shirt });
-  if (config.pants) tasks.push({ type: "pants", data: config.pants });
+  if (config.pant) tasks.push({ type: "pant", data: config.pant });
   if (config.face) tasks.push({ type: "face", data: config.face });
 
   if (tasks.length === 0) return;
@@ -1342,7 +1290,7 @@ window.loadOutfit = function (config, isBase64 = false) {
         if (task.type === "shirt") {
           if (currentShirtTexture) currentShirtTexture.dispose();
           currentShirtTexture = tex;
-        } else if (task.type === "pants") {
+        } else if (task.type === "pant") {
           if (currentPantsTexture) currentPantsTexture.dispose();
           currentPantsTexture = tex;
         } else if (task.type === "face") {
@@ -1376,12 +1324,12 @@ window.loadTextureFromBase64 = (data, type) =>
 window.setClothingFromUrl = (url, type) =>
   window.loadOutfit({ [type]: url }, false);
 window.setComboFromUrls = (sUrl, pUrl) =>
-  window.loadOutfit({ shirt: sUrl, pants: pUrl }, false);
+  window.loadOutfit({ shirt: sUrl, pant: pUrl }, false);
 
 window.setShirtFromBase64 = (base64) =>
   window.loadOutfit({ shirt: base64 }, true);
 window.setPantsFromBase64 = (base64) =>
-  window.loadOutfit({ pants: base64 }, true);
+  window.loadOutfit({ pant: base64 }, true);
 
 function updateCompositeTexture() {
   if (!compositeCanvas) {
@@ -1396,8 +1344,8 @@ function updateCompositeTexture() {
     compositeTexture.flipY = false;
   }
 
-  // đổi màu da
-  compositeCtx.fillStyle = currentSkinColor;
+  // Clear with skin background
+  compositeCtx.fillStyle = "#ffffff";
   compositeCtx.fillRect(0, 0, 1024, 1024);
 
   const drawMaps = (img, mappings) => {
@@ -1443,7 +1391,7 @@ function updateFaceTexture() {
   }
 
   // Màu nền da mặc định
-  faceCtx.fillStyle = currentSkinColor;
+  faceCtx.fillStyle = "#ffffff";
   faceCtx.fillRect(0, 0, faceCanvas.width, faceCanvas.height);
 
   if (currentFaceTexture && currentFaceTexture.image) {
@@ -1568,94 +1516,7 @@ function animate() {
   renderer.render(scene, camera);
 }
 
-// khóa zoom
-function injectZoomControls() {
-  const style = document.createElement("style");
-  style.textContent = `
-    #zoom-controls {
-      position: fixed;
-      right: 20px;
-      bottom: 120px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      z-index: 400;
-    }
-    .zoom-btn {
-      width: 48px;
-      height: 48px;
-      background: rgba(11, 14, 17, 0.75);
-      backdrop-filter: blur(18px) saturate(130%);
-      -webkit-backdrop-filter: blur(18px) saturate(130%);
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-radius: 14px;
-      color: white;
-      font-size: 22px;
-      font-weight: 500;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-      user-select: none;
-    }
-    .zoom-btn:hover {
-      background: rgba(255, 255, 255, 0.12);
-      transform: translateY(-2px);
-      border-color: rgba(255, 255, 255, 0.25);
-    }
-    .zoom-btn:active {
-      transform: translateY(0) scale(0.95);
-    }
-    .zoom-btn.locked {
-      background: rgba(230, 57, 70, 0.25);
-      border-color: #E63946;
-      color: #E63946;
-    }
-    .zoom-btn svg {
-      width: 20px;
-      height: 20px;
-      fill: currentColor;
-    }
-  `;
-  document.head.appendChild(style);
-
-  const container = document.createElement("div");
-  container.id = "zoom-controls";
-  container.innerHTML = `
-    <button id="btn-lock-zoom" class="zoom-btn" title="Khóa/Mở khóa Zoom">
-      <svg id="icon-zoom-lock" viewBox="0 0 24 24"><path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM8.9 6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2H8.9V6z"/></svg>
-    </button>
-  `;
-  document.body.appendChild(container);
-
-  const btnLock = document.getElementById("btn-lock-zoom");
-  const iconLock = document.getElementById("icon-zoom-lock");
-
-  window.setZoomLocked = (locked) => {
-    isZoomLocked = !!locked;
-    if (controls) controls.enableZoom = !isZoomLocked;
-
-    if (btnLock) btnLock.classList.toggle("locked", isZoomLocked);
-    if (iconLock) {
-      if (isZoomLocked) {
-        iconLock.innerHTML =
-          '<path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM9 6c0-1.66 1.34-3 3-3s3 1.34 3 3v2H9V6zm9 14H6V10h12v10zm-6-3c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2z"/>';
-      } else {
-        iconLock.innerHTML =
-          '<path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM8.9 6c0-1.71 1.39-3.1 3.1-3.1s3.1 1.39 3.1 3.1v2H8.9V6z"/>';
-      }
-    }
-  };
-
-  if (btnLock) {
-    btnLock.addEventListener("click", () => {
-      window.setZoomLocked(!isZoomLocked);
-    });
-  }
-}
-
+// ── Control Panel UI ─────────────────────────────────────────────────────────
 function injectControlPanel() {
   const panel = document.createElement("div");
   panel.id = "control-panel";
@@ -1676,7 +1537,7 @@ function injectControlPanel() {
       border: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 16px;
       padding: 16px;
-      display: flex;
+      display: none;
       flex-direction: column;
       gap: 12px;
       z-index: 300;
@@ -1722,7 +1583,7 @@ function injectControlPanel() {
     }
     .panel-btn:hover { background: rgba(255,255,255,0.12); }
     .panel-btn.active { background: #E63946; border-color: #E63946; }
-    
+
     .toggle-container {
       display: flex;
       align-items: center;
@@ -1805,10 +1666,10 @@ function injectControlPanel() {
       text-align: center;
       display: block;
     }
-    .upload-btn:hover { 
-      background: rgba(255,255,255,0.12); 
-      border-color: #E63946; 
-      color: #fff; 
+    .upload-btn:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: #E63946;
+      color: #fff;
     }
   `;
   document.head.appendChild(style);
@@ -1820,7 +1681,7 @@ function injectControlPanel() {
       <select id="hair-select" style="
         width:100%; padding:8px 10px;
         border:1px solid rgba(255,255,255,0.15);
-        border-radius:8px; 
+        border-radius:8px;
         font-size:12px; font-family:Inter,sans-serif;
         cursor:pointer; outline:none;
         appearance:none; -webkit-appearance:none;
@@ -1830,12 +1691,12 @@ function injectControlPanel() {
       <input type="file" id="upload-hair" accept=".glb" style="display:none">
       <button class="upload-btn" onclick="document.getElementById('upload-hair').click()">📁 Upload .glb</button>
       </div>
-      
+
       <div class="panel-title" style="margin-top:8px">🕶️ Chọn Kính</div>
       <select id="glasses-select" style="
         width:100%; padding:8px 10px;
         border:1px solid rgba(255,255,255,0.15);
-        border-radius:8px; 
+        border-radius:8px;
         font-size:12px; font-family:Inter,sans-serif;
         cursor:pointer; outline:none;
         appearance:none; -webkit-appearance:none;
@@ -1846,24 +1707,24 @@ function injectControlPanel() {
       <button class="upload-btn" onclick="document.getElementById('upload-glasses').click()">📁 Upload .glb</button>
 
       <div class="panel-title" style="margin-top:8px">🦅 Chọn Cánh</div>
-      <select id="wings-select" style="
+      <select id="wing-select" style="
         width:100%; padding:8px 10px;
         border:1px solid rgba(255,255,255,0.15);
-        border-radius:8px; 
+        border-radius:8px;
         font-size:12px; font-family:Inter,sans-serif;
         cursor:pointer; outline:none;
         appearance:none; -webkit-appearance:none;
       ">
         <option value="">-- Chưa chọn --</option>
       </select>
-      <input type="file" id="upload-wings" accept=".glb" style="display:none">
-      <button class="upload-btn" onclick="document.getElementById('upload-wings').click()">📁 Upload .glb</button>
+      <input type="file" id="upload-wing" accept=".glb" style="display:none">
+      <button class="upload-btn" onclick="document.getElementById('upload-wing').click()">📁 Upload .glb</button>
 
       <div class="panel-title" style="margin-top:8px">💎 Chọn Vòng cổ</div>
       <select id="neck-select" style="
         width:100%; padding:8px 10px;
         border:1px solid rgba(255,255,255,0.15);
-        border-radius:8px; 
+        border-radius:8px;
         font-size:12px; font-family:Inter,sans-serif;
         cursor:pointer; outline:none;
         appearance:none; -webkit-appearance:none;
@@ -1877,7 +1738,7 @@ function injectControlPanel() {
       <select id="righthand-select" style="
         width:100%; padding:8px 10px;
         border:1px solid rgba(255,255,255,0.15);
-        border-radius:8px; 
+        border-radius:8px;
         font-size:12px; font-family:Inter,sans-serif;
         cursor:pointer; outline:none;
         appearance:none; -webkit-appearance:none;
@@ -1890,7 +1751,7 @@ function injectControlPanel() {
       <select id="lefthand-select" style="
         width:100%; padding:8px 10px;
         border:1px solid rgba(255,255,255,0.15);
-        border-radius:8px; 
+        border-radius:8px;
         font-size:12px; font-family:Inter,sans-serif;
         cursor:pointer; outline:none;
         appearance:none; -webkit-appearance:none;
@@ -1904,7 +1765,7 @@ function injectControlPanel() {
       <select id="shoulder-select" style="
         width:100%; padding:8px 10px;
         border:1px solid rgba(255,255,255,0.15);
-        border-radius:8px; 
+        border-radius:8px;
         font-size:12px; font-family:Inter,sans-serif;
         cursor:pointer; outline:none;
         appearance:none; -webkit-appearance:none;
@@ -1918,7 +1779,7 @@ function injectControlPanel() {
       <select id="hat-select" style="
         width:100%; padding:8px 10px;
         border:1px solid rgba(255,255,255,0.15);
-        border-radius:8px; 
+        border-radius:8px;
         font-size:12px; font-family:Inter,sans-serif;
         cursor:pointer; outline:none;
         appearance:none; -webkit-appearance:none;
@@ -1932,7 +1793,7 @@ function injectControlPanel() {
       <select id="waist-select" style="
         width:100%; padding:8px 10px;
         border:1px solid rgba(255,255,255,0.15);
-        border-radius:8px; 
+        border-radius:8px;
         font-size:12px; font-family:Inter,sans-serif;
         cursor:pointer; outline:none;
         appearance:none; -webkit-appearance:none;
@@ -1945,7 +1806,7 @@ function injectControlPanel() {
       <div style="display:flex; gap:6px; margin-top:6px; flex-wrap:wrap;">
         <button class="panel-btn" id="btn-clear-hair" style="flex:1; min-width:30%; padding:6px 0; text-align:center;">❌ Tóc</button>
         <button class="panel-btn" id="btn-clear-glasses" style="flex:1; min-width:30%; padding:6px 0; text-align:center;">❌ Kính</button>
-        <button class="panel-btn" id="btn-clear-wings" style="flex:1; min-width:30%; padding:6px 0; text-align:center;">❌ Cánh</button>
+        <button class="panel-btn" id="btn-clear-wing" style="flex:1; min-width:30%; padding:6px 0; text-align:center;">❌ Cánh</button>
         <button class="panel-btn" id="btn-clear-neck" style="flex:1; min-width:30%; padding:6px 0; text-align:center;">❌ Cổ</button>
         <button class="panel-btn" id="btn-clear-righthand" style="flex:1; min-width:30%; padding:6px 0; text-align:center;">❌ Tay phải</button>
         <button class="panel-btn" id="btn-clear-lefthand" style="flex:1; min-width:30%; padding:6px 0; text-align:center;">❌ Tay trái</button>
@@ -2009,6 +1870,7 @@ function injectControlPanel() {
   tuningStyle.textContent = `
     #tuning-panel {
       position: fixed;
+      display:none;
       top: 20px;
       left: 20px;
       width: 240px;
@@ -2063,9 +1925,9 @@ function injectControlPanel() {
     const sel = document.getElementById("glasses-select");
     if (sel) sel.value = "";
   });
-  document.getElementById("btn-clear-wings").addEventListener("click", () => {
-    clearAccessoryByCategory("wings");
-    const sel = document.getElementById("wings-select");
+  document.getElementById("btn-clear-wing").addEventListener("click", () => {
+    clearAccessoryByCategory("wing");
+    const sel = document.getElementById("wing-select");
     if (sel) sel.value = "";
   });
   document.getElementById("btn-clear-neck").addEventListener("click", () => {
@@ -2236,15 +2098,15 @@ function injectControlPanel() {
           // Determine the correct path to load the model
           // category_map logic matches the server's CATEGORY_MAP
           const folderMap = {
-            hair: "public/image/hair/",
-            glasses: "public/image/glasses/",
-            wings: "public/image/wing/",
-            neck: "public/image/neck/",
-            righthand: "public/image/righthand/",
-            lefthand: "public/image/lefthand/",
-            shoulder: "public/image/shoulder/",
-            hat: "public/image/hat/",
-            waist: "public/image/waist/",
+            hair: "image/hair/",
+            glasses: "image/glasses/",
+            wing: "image/wing/",
+            neck: "image/neck/",
+            righthand: "image/righthand/",
+            lefthand: "image/lefthand/",
+            shoulder: "image/shoulder/",
+            hat: "image/hat/",
+            waist: "image/waist/",
           };
 
           const filename = result.filename;
@@ -2273,7 +2135,7 @@ function injectControlPanel() {
 
   handleFileUpload("upload-hair", "hair", "Head");
   handleFileUpload("upload-glasses", "glasses", "FaceCenter");
-  handleFileUpload("upload-wings", "wings", "BodyBack");
+  handleFileUpload("upload-wing", "wing", "BodyBack");
   handleFileUpload("upload-neck", "neck", "Neck");
   handleFileUpload("upload-righthand", "righthand", "RightGrip");
   handleFileUpload("upload-lefthand", "lefthand", "LeftGrip");
@@ -2399,42 +2261,39 @@ function updateEnvironment(theme) {
 }
 
 // ── Accessory System ─────────────────────────────────────────────────────────
-function addAccessory(mesh, attachmentName = "Head") {
+function addAccessory(model, attachmentName) {
   if (!avatar) return;
+  let targetNode = null;
+  const normalizedSearchName = attachmentName.toLowerCase();
 
-  let target = null;
-  // Ưu tiên dùng headTargets nếu đang muốn gắn vào Head
-  if (attachmentName.toLowerCase().includes("head") && headTargets.length > 0) {
-    target = headTargets[0];
-  }
+  avatar.traverse((node) => {
+    const nodeName = node.name.toLowerCase();
+    // Ưu tiên tìm chính xác điểm Grip hoặc Attachment
+    if (
+      nodeName.includes(normalizedSearchName) &&
+      (nodeName.includes("grip") || nodeName.includes("attachment"))
+    ) {
+      targetNode = node;
+    }
+    // Fallback: Tìm theo tên bộ phận
+    if (!targetNode && nodeName === normalizedSearchName) {
+      targetNode = node;
+    }
+  });
 
-  // Nếu không thấy trong headTargets, tìm thủ công
-  if (!target) {
-    const lowTargetName = attachmentName.toLowerCase();
-    avatar.traverse((child) => {
-      if (target) return;
-      const lowChildName = child.name.toLowerCase();
-      if (
-        lowChildName === lowTargetName ||
-        (lowChildName.includes(lowTargetName) &&
-          !lowChildName.includes("attachment"))
-      ) {
-        target = child;
-      }
-    });
-  }
-
-  if (target) {
-    const socket =
-      target.getObjectByName(attachmentName + "Attachment") || target;
-    socket.add(mesh);
-    console.log(`Attached accessory to ${socket.name}`);
+  if (targetNode) {
+    targetNode.add(model);
+    console.log(
+      `Attached accessory to: ${targetNode.name} (Parent: ${targetNode.parent ? targetNode.parent.name : "none"})`,
+    );
   } else {
-    avatar.add(mesh);
+    avatar.add(model);
+    console.warn(
+      `Could not find attachment point: ${attachmentName}, adding to root.`,
+    );
   }
-  // Không gọi updateAccessoriesTransform() để không ghi đè tọa độ riêng của từng tóc
 }
-// 123
+
 function loadAccessoryFromFile(
   url,
   category,
@@ -2444,22 +2303,19 @@ function loadAccessoryFromFile(
 ) {
   if (!avatar) return;
   const activeCharId = forcedCharId || currentCharId;
-
   const filename = url.split("/").pop();
-
+  console.log(filename);
   let config = configObj;
   // Fallback map cho config trong trường hợp reload loadAvatar mà không có sẵn
   if (!config) {
-    const lowCat = category.toLowerCase();
-    if (lowCat === "glasses") config = glassesConfigMap[filename];
-    else if (lowCat === "wing" || lowCat === "wings")
-      config = wingsConfigMap[filename];
-    else if (lowCat === "neck") config = neckConfigMap[filename];
-    else if (lowCat === "righthand") config = righthandConfigMap[filename];
-    else if (lowCat === "lefthand") config = lefthandConfigMap[filename];
-    else if (lowCat === "shoulder") config = shoulderConfigMap[filename];
-    else if (lowCat === "hat") config = hatConfigMap[filename];
-    else if (lowCat === "waist") config = waistConfigMap[filename];
+    if (category === "glasses") config = glassesConfigMap[filename];
+    else if (category === "wing") config = wingConfigMap[filename];
+    else if (category === "neck") config = neckConfigMap[filename];
+    else if (category === "righthand") config = righthandConfigMap[filename];
+    else if (category === "lefthand") config = lefthandConfigMap[filename];
+    else if (category === "shoulder") config = shoulderConfigMap[filename];
+    else if (category === "hat") config = hatConfigMap[filename];
+    else if (category === "waist") config = waistConfigMap[filename];
     else config = accessoryConfigMap[filename];
   }
 
@@ -2507,7 +2363,6 @@ function loadAccessoryFromFile(
 
   setLoadingVisible(true);
   const loader = new GLTFLoader();
-  loader.setCrossOrigin("anonymous");
   loader.load(
     url,
     (gltf) => {
@@ -2541,17 +2396,16 @@ function loadAccessoryFromFile(
 
       addAccessory(model, attachmentName);
       setLoadingVisible(false);
-      console.log(`[Phụ kiện] Đã thêm: ${filename}`);
-      
-      // Sử dụng Object để lưu phụ kiện theo category (vd: hair: "toc1.gltf") 
-      // Điều này giúp tránh việc mảng cứ dài ra vô tận (bị trùng lặp) khi bạn thay đổi phụ kiện liên tục
-      var equippedAccessories = JSON.parse(window.localStorage.getItem("equipped_accessories")) || {};
-      
-      // Cập nhật phụ kiện mới cho bộ phận tương ứng
+      var equippedAccessories =
+        JSON.parse(window.localStorage.getItem("equipped_accessories")) || {};
+
       equippedAccessories[category] = filename;
 
-      // Lưu lại vào localStorage
-      window.localStorage.setItem("equipped_accessories", JSON.stringify(equippedAccessories));
+      // Lưu vào localStorage
+      window.localStorage.setItem(
+        "equipped_accessories",
+        JSON.stringify(equippedAccessories),
+      );
     },
     undefined,
     (err) => {
@@ -2673,12 +2527,15 @@ window.updateTheme = function (mode) {
   if (ambient) ambient.intensity = theme.ambientIntensity;
   if (dirLight) dirLight.intensity = theme.lightIntensity;
 };
+// Xóa toàn bộ phụ kiện đang mặc
+window.clearAllAccessories = function () {
+  Object.keys(activeAccessories).forEach((category) => {
+    clearAccessoryByCategory(category);
+  });
+  console.log("[WebView] All accessories cleared.");
+};
 
-/**
- * Hàm nhận mảng phụ kiện từ Kotlin
- * @param {Array|String} data - Danh sách phụ kiện JSON
- * @param {string} charId - ID nhân vật (man, woman, rounded, default)
- */
+//Hàm nhận mảng phụ kiện từ Kotlin
 window.setAccessories = function (data, charId = null) {
   let dataList = data;
   if (typeof data === "string") {
@@ -2690,36 +2547,43 @@ window.setAccessories = function (data, charId = null) {
   }
   if (!Array.isArray(dataList)) return;
 
-  var equippedAccessories = JSON.parse(window.localStorage.getItem("equipped_accessories")) || {};
+  var equippedAccessories =
+    JSON.parse(window.localStorage.getItem("equipped_accessories")) || {};
+
 
   dataList.forEach((item) => {
-    const { key, value } = item;
-    const meta = ACCESSORY_CATEGORY_MAP[key];
+      const { key, value } = item;
+      const meta = ACCESSORY_CATEGORY_MAP[key];
 
-    if (meta && value) {
-      const filename = value.split("/").pop();
-        
-      // Nếu phụ kiện này đã có trong localStorage (đã mặc) thì không tải lại, không xóa
-      if (equippedAccessories[key] === filename) {
-        return;
+      if (meta) {
+        if (value) {
+          const filename = value.split("/").pop();
+
+          // Nếu phụ kiện này đã có trong localStorage không xóa
+          if (equippedAccessories[key] === filename) {
+            return;
+          }
+
+          clearAccessoryByCategory(key);
+          activeAccessories[key] = value;
+
+          const fullUrl = value.startsWith("http") ? value : meta.path + value;
+          loadAccessoryFromFile(fullUrl, key, meta.attachment, null, charId);
+        } else {
+
+          clearAccessoryByCategory(key);
+
+          if (equippedAccessories[key]) {
+            delete equippedAccessories[key];
+            window.localStorage.setItem(
+              "equipped_accessories",
+              JSON.stringify(equippedAccessories),
+            );
+          }
+        }
       }
-
-      // 1. Xóa phụ kiện cũ cùng loại trước khi thêm mới
-      clearAccessoryByCategory(key);
-      activeAccessories[key] = value;
-
-      // 2. Tải phụ kiện mới với tọa độ chuẩn của nhân vật được chỉ định
-      const fullUrl = value.startsWith("http") ? value : meta.path + value;
-      loadAccessoryFromFile(fullUrl, key, meta.attachment, null, charId);
-    }
-  });
+    });
 };
-
-/**
- * Hàm hợp nhất nhận mảng Key-Value cho cả Quần áo và Phụ kiện
- * @param {Array} dataList - [{key: 'shirt', value: '...'}, {key: 'hair', value: '...'}]
- * @param {string} charId - ID nhân vật tùy chọn
- */
 window.setItems = function (dataList, charId = null) {
   if (!Array.isArray(dataList)) return;
 
@@ -2728,7 +2592,7 @@ window.setItems = function (dataList, charId = null) {
 
   dataList.forEach((item) => {
     const { key, value } = item;
-    if (["shirt", "pants", "face"].includes(key)) {
+    if (["shirt", "pant", "face"].includes(key)) {
       clothingConfig[key] = value;
     } else if (ACCESSORY_CATEGORY_MAP[key]) {
       accessoryTasks.push(item);
@@ -2740,21 +2604,87 @@ window.setItems = function (dataList, charId = null) {
     window.loadOutfit(clothingConfig, false);
   }
 
-  // 2. Áp dụng phụ kiện 3D (nếu có)
-  if (accessoryTasks.length > 0) {
-    window.setAccessories(accessoryTasks, charId);
+  // 2. Áp dụng phụ kiện 3D
+  // Luôn gọi để đảm bảo logic xóa phụ kiện cũ (clearAllAccessories) được thực thi
+  window.setAccessories(accessoryTasks, charId);
+};
+
+window.captureScreen = function () {
+  const canvas = document.querySelector("canvas");
+
+  if (!canvas) {
+    console.log("❌ Không có canvas");
+    return;
+  }
+
+  camera.position.set(0, 1.2, 2.5);
+  camera.lookAt(0, 1, 0);
+
+  if (window.controls) {
+    controls.target.set(0, 1, 0);
+    controls.update();
+  }
+
+  renderer.render(scene, camera);
+
+
+  const tempCanvas = document.createElement("canvas");
+  tempCanvas.width = canvas.width;
+  tempCanvas.height = canvas.height;
+  const ctx = tempCanvas.getContext("2d");
+
+
+  const processCapture = () => {
+
+    ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
+    const base64 = tempCanvas.toDataURL("image/png");
+    if (window.Android && window.Android.onCapture) {
+      Android.onCapture(base64);
+    }
+  };
+
+  const bgValue = window.currentBackgroundValue;
+
+  if (bgValue) {
+    if (bgValue.startsWith('#') || bgValue.startsWith('rgb')) {
+
+      ctx.fillStyle = bgValue;
+      ctx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+      processCapture();
+    } else {
+      const img = new Image();
+      img.crossOrigin = "Anonymous";
+      img.onload = () => {
+        const canvasRatio = tempCanvas.width / tempCanvas.height;
+        const imgRatio = img.width / img.height;
+        let drawWidth = tempCanvas.width;
+        let drawHeight = tempCanvas.height;
+        let offsetX = 0;
+        let offsetY = 0;
+
+        if (canvasRatio > imgRatio) {
+          drawHeight = tempCanvas.width / imgRatio;
+          offsetY = (tempCanvas.height - drawHeight) / 2;
+        } else {
+          drawWidth = tempCanvas.height * imgRatio;
+          offsetX = (tempCanvas.width - drawWidth) / 2;
+        }
+
+        ctx.drawImage(img, offsetX, offsetY, drawWidth, drawHeight);
+        processCapture();
+      };
+      img.onerror = () => {
+        console.error("Lỗi khi tải ảnh nền để chụp, sẽ chụp ảnh không nền.");
+        processCapture();
+      };
+      img.src = bgValue;
+    }
+  } else {
+    processCapture();
   }
 };
-// // Khai báo biến trạng thái bên phía Kotlin
-// var isZoomLocked = false
-// // Khi người dùng nhấn nút trên giao diện Android (Kotlin)
-// fun toggleZoom() {
-//     isZoomLocked = !isZoomLocked
 
-//     // Truyền trạng thái sang JavaScript
-//     val script = "window.setZoomLocked($isZoomLocked)"
-//     webView.evaluateJavascript(script, null)
-
-//     // Log để kiểm tra
-//     println("Trạng thái khóa Zoom hiện tại: $isZoomLocked")
-// }
+window.clearStorage = function() {
+    localStorage.clear();
+    clearAllAccessories();
+};
